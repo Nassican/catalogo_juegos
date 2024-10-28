@@ -1,6 +1,18 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
-import os
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    foto = models.ImageField(upload_to='usuarios/', null=True, blank=True)
+    bio = models.TextField(max_length=500, blank=True)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+
+    def delete(self, *args, **kwargs):
+        if self.foto:
+            if os.path.isfile(self.foto.path):
+                os.remove(self.foto.path)
+        super().delete(*args, **kwargs)
 
 
 class Categoria(models.Model):

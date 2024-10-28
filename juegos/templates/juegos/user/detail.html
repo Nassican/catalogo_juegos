@@ -1,0 +1,81 @@
+{% extends 'juegos/base.html' %}
+{% block title %}Perfil de {{ profile_user.username }}{% endblock %}
+{% block header %}Perfil de Usuario{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">{{ profile_user.get_full_name|default:profile_user.username }}</h3>
+        {% if user == profile_user %}
+        <div class="card-tools">
+            <a href="{% url 'juegos:user_update' %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Editar Perfil
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                {% if profile_user.foto %}
+                    <img src="{{ profile_user.foto.url }}" alt="Foto de perfil" class="img-fluid rounded-circle mb-3" style="max-width: 200px;">
+                {% else %}
+                    <i class="fas fa-user-circle fa-8x text-secondary mb-3"></i>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-sm-3">Nombre</dt>
+                    <dd class="col-sm-9">{{ profile_user.get_full_name }}</dd>
+
+                    <dt class="col-sm-3">Usuario</dt>
+                    <dd class="col-sm-9">{{ profile_user.username }}</dd>
+
+                    <dt class="col-sm-3">Email</dt>
+                    <dd class="col-sm-9">{{ profile_user.email }}</dd>
+
+                    {% if profile_user.fecha_nacimiento %}
+                        <dt class="col-sm-3">Fecha de Nacimiento</dt>
+                        <dd class="col-sm-9">{{ profile_user.fecha_nacimiento }}</dd>
+                    {% endif %}
+
+                    {% if profile_user.bio %}
+                        <dt class="col-sm-3">Biografía</dt>
+                        <dd class="col-sm-9">{{ profile_user.bio }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h3 class="card-title">Reseñas de {{ profile_user.username }}</h3>
+    </div>
+    <div class="card-body">
+        {% if resenas %}
+            {% for resena in resenas %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5><a href="{% url 'juegos:juego_detail' resena.juego.pk %}">{{ resena.juego.titulo }}</a></h5>
+                        <div class="mb-2">
+                            {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= resena.puntuacion %}
+                                    <i class="fas fa-star text-warning"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p>{{ resena.comentario }}</p>
+                        <small class="text-muted">{{ resena.fecha_creacion }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No hay reseñas para mostrar.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

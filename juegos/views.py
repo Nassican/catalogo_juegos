@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Categoria, Juego, Resena
-from .forms import CategoriaForm, JuegoForm, ResenaForm, CustomUserCreationForm
+from .models import Categoria, Juego, Resena, User
+from .forms import CategoriaForm, JuegoForm, ResenaForm, CustomUserCreationForm, UserUpdateForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login
 from django.urls import reverse
@@ -13,6 +13,28 @@ def index(request):
     if request.user.is_authenticated:
         return redirect('juegos:dashboard')
     return redirect('juegos:login')
+
+@login_required
+def user_detail(request, username):
+    user = get_object_or_404(User, username=username)
+    resenas = Resena.objects.filter(usuario=user)
+    context = {
+        'profile_user': user,
+        'resenas': resenas
+    }
+    return render(request, 'juegos/user/detail.html', context)
+
+@login_required
+def user_update(request):
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Perfil actualizado exitosamente.')
+            return redirect('juegos:user_detail', username=request.user.username)
+    else:
+        form = UserUpdateForm(instance=request.user)
+    return render(request, 'juegos/user/form.html', {'form': form})
 
 
 @login_required
@@ -199,3 +221,4 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         messages.success(self.request, 'Inicio de sesión exitoso.')
         return reverse('juegos:dashboard')
+

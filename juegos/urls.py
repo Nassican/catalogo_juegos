@@ -12,6 +12,9 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='juegos:login'), name='logout'),
     path('register/', views.register, name='register'),
+    # Agregar estas URLs al urlpatterns existente
+    path('perfil/editar/', views.user_update, name='user_update'),
+    path('perfil/<str:username>/', views.user_detail, name='user_detail'),
 
     # URLs para Categorías
     path('categorias/', views.categoria_list, name='categoria_list'),
