@@ -93,39 +93,66 @@
         </div>
     </div>
 
-    <!-- Acciones Rápidas -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Acciones Rápidas</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <a href="{% url 'juegos:juego_create' %}" class="btn btn-primary btn-block mb-3">
-                                <i class="fas fa-plus-circle"></i> Nuevo Juego
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="{% url 'juegos:categoria_create' %}" class="btn btn-success btn-block mb-3">
-                                <i class="fas fa-folder-plus"></i> Nueva Categoría
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="{% url 'juegos:resena_list' %}" class="btn btn-warning btn-block mb-3">
-                                <i class="fas fa-star"></i> Mis Reseñas
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="{% url 'juegos:user_update' %}" class="btn btn-info btn-block mb-3">
-                                <i class="fas fa-user-edit"></i> Editar Perfil
-                            </a>
+    {% if user.is_admin_role %}
+        <!-- Panel de Administración -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-cogs"></i> Panel de Administración</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a href="{% url 'juegos:juego_create' %}" class="btn btn-primary btn-block mb-3">
+                                    <i class="fas fa-plus-circle"></i> Nuevo Juego
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{% url 'juegos:categoria_create' %}" class="btn btn-success btn-block mb-3">
+                                    <i class="fas fa-folder-plus"></i> Nueva Categoría
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{% url 'juegos:resena_list' %}" class="btn btn-warning btn-block mb-3">
+                                    <i class="fas fa-star"></i> Todas las Reseñas
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% else %}
+        <!-- Panel de Usuario -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-user"></i> Acciones de Usuario</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <a href="{% url 'juegos:juego_list' %}" class="btn btn-primary btn-block mb-3">
+                                    <i class="fas fa-gamepad"></i> Ver Juegos
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{% url 'juegos:resena_list' %}" class="btn btn-warning btn-block mb-3">
+                                    <i class="fas fa-star"></i> Mis Reseñas
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{% url 'juegos:user_update' %}" class="btn btn-info btn-block mb-3">
+                                    <i class="fas fa-user-edit"></i> Editar Perfil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

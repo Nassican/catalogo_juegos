@@ -84,20 +84,16 @@ class ResenaForm(forms.ModelForm):
 
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Ingrese su correo electrónico'
-    }))
-
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2', 'role')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for fieldname in ['username', 'password1', 'password2']:
-            self.fields[fieldname].widget.attrs = {'class': 'form-control'}
-            
+        if not kwargs.get('initial', {}).get('is_admin'):
+            self.fields.pop('role')
+
+
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User

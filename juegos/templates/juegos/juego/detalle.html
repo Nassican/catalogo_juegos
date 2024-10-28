@@ -74,29 +74,27 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <h5>{{ resena.usuario.get_full_name|default:resena.usuario.username }}</h5>
-                                <div>
+                                <div class="d-flex align-items-center">
                                     {% for i in "12345"|make_list %}
                                         {% if forloop.counter <= resena.puntuacion %}
                                             <i class="fas fa-star text-warning"></i>
                                         {% else %}
-                                            <i class="far fa-star"></i>
+                                            <i class="far fa-star text-warning"></i>
                                         {% endif %}
                                     {% endfor %}
+                                    {% if user == resena.usuario or user.is_admin_role %}
+                                        <div class="ml-3">
+                                            <a href="{% url 'juegos:resena_update' resena.pk %}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'juegos:resena_delete' resena.pk %}" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
-                            <p>{{ resena.comentario }}</p>
-                            <small class="text-muted">{{ resena.fecha_creacion }}</small>
-                            
-                            {% if request.user == resena.usuario %}
-                                <div class="mt-2">
-                                    <a href="{% url 'juegos:resena_update' resena.pk %}" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </a>
-                                    <a href="{% url 'juegos:resena_delete' resena.pk %}" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i> Eliminar
-                                    </a>
-                                </div>
-                            {% endif %}
+                            <p class="mt-2 mb-0">{{ resena.comentario }}</p>
                         </div>
                     </div>
                 {% endfor %}

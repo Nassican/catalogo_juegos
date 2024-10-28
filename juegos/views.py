@@ -6,6 +6,7 @@ from .forms import CategoriaForm, JuegoForm, ResenaForm, CustomUserCreationForm,
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login
 from django.urls import reverse
+from .decorators import admin_required
 # Dashboard
 
 
@@ -57,7 +58,7 @@ def categoria_list(request):
     return render(request, 'juegos/categoria/lista.html', {'categorias': categorias})
 
 
-@login_required
+@admin_required
 def categoria_create(request):
     if request.method == 'POST':
         form = CategoriaForm(request.POST, request.FILES)
@@ -70,7 +71,7 @@ def categoria_create(request):
     return render(request, 'juegos/categoria/form.html', {'form': form, 'action': 'Crear'})
 
 
-@login_required
+@admin_required
 def categoria_update(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
     if request.method == 'POST':
@@ -84,7 +85,7 @@ def categoria_update(request, pk):
     return render(request, 'juegos/categoria/form.html', {'form': form, 'action': 'Editar'})
 
 
-@login_required
+@admin_required
 def categoria_delete(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
     if request.method == 'POST':
@@ -116,7 +117,7 @@ def juego_detail(request, pk):
     return render(request, 'juegos/juego/detalle.html', context)
 
 
-@login_required
+@admin_required
 def juego_create(request):
     if request.method == 'POST':
         form = JuegoForm(request.POST, request.FILES)
@@ -129,7 +130,7 @@ def juego_create(request):
     return render(request, 'juegos/juego/form.html', {'form': form, 'action': 'Crear'})
 
 
-@login_required
+@admin_required
 def juego_update(request, pk):
     juego = get_object_or_404(Juego, pk=pk)
     if request.method == 'POST':
@@ -143,7 +144,7 @@ def juego_update(request, pk):
     return render(request, 'juegos/juego/form.html', {'form': form, 'action': 'Editar'})
 
 
-@login_required
+@admin_required
 def juego_delete(request, pk):
     juego = get_object_or_404(Juego, pk=pk)
     if request.method == 'POST':
@@ -157,7 +158,10 @@ def juego_delete(request, pk):
 
 @login_required
 def resena_list(request):
-    resenas = Resena.objects.filter(usuario=request.user)
+    if request.user.is_admin_role():
+        resenas = Resena.objects.all()
+    else:
+        resenas = Resena.objects.filter(usuario=request.user)
     return render(request, 'juegos/resena/lista.html', {'resenas': resenas})
 
 
@@ -188,7 +192,8 @@ def resena_create(request, juego_id):
 @login_required
 def resena_update(request, pk):
     resena = get_object_or_404(Resena, pk=pk)
-    if request.user != resena.usuario:
+    # Permitir edición si es el dueño de la reseña o es admin
+    if request.user != resena.usuario and not request.user.is_admin_role():
         messages.error(request, 'No tienes permiso para editar esta reseña.')
         return redirect('juegos:juego_detail', pk=resena.juego.pk)
 
@@ -206,7 +211,8 @@ def resena_update(request, pk):
 @login_required
 def resena_delete(request, pk):
     resena = get_object_or_404(Resena, pk=pk)
-    if request.user != resena.usuario:
+    # Permitir eliminación si es el dueño de la reseña o es admin
+    if request.user != resena.usuario and not request.user.is_admin_role():
         messages.error(request, 'No tienes permiso para eliminar esta reseña.')
         return redirect('juegos:juego_detail', pk=resena.juego.pk)
 

@@ -4,15 +4,24 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
+    ADMIN = 'admin'
+    USER = 'user'
+    ROLE_CHOICES = [
+        (ADMIN, 'Administrador'),
+        (USER, 'Usuario'),
+    ]
+    
+    role = models.CharField(
+        max_length=10,
+        choices=ROLE_CHOICES,
+        default=USER
+    )
     foto = models.ImageField(upload_to='usuarios/', null=True, blank=True)
     bio = models.TextField(max_length=500, blank=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
 
-    def delete(self, *args, **kwargs):
-        if self.foto:
-            if os.path.isfile(self.foto.path):
-                os.remove(self.foto.path)
-        super().delete(*args, **kwargs)
+    def is_admin_role(self):
+        return self.role == self.ADMIN
 
 
 class Categoria(models.Model):
