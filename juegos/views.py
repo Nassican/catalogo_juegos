@@ -125,7 +125,7 @@ def juego_delete(request, pk):
 
 @login_required
 def resena_list(request):
-    resenas = Resena.objects.all()
+    resenas = Resena.objects.filter(usuario=request.user)
     return render(request, 'juegos/resena/lista.html', {'resenas': resenas})
 
 

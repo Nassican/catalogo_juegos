@@ -1,6 +1,6 @@
 {% load static %}
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-primary elevation-4 position-fixed">
     <!-- Brand Logo -->
     <a href="{% url 'juegos:dashboard' %}" class="brand-link">
         <img src="{% static 'admin-lte/dist/img/AdminLTELogo.png' %}"
@@ -107,7 +107,7 @@
         </nav>
         <!-- Botón Cerrar Sesión al final -->
         {% if user.is_authenticated %}
-        <div>
+        <div class="mb-2">
             <form method="post" action="{% url 'juegos:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-secondary btn-block">
