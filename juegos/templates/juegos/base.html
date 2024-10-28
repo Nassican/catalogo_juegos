@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -17,11 +18,9 @@
   </head>
   <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-      <!-- Incluir el sidebar -->
-      {% include 'juegos/includes/main_sidebar.html' %}
-
-      <!-- Content Wrapper -->
-      <div class="content-wrapper">
+        {% include 'juegos/includes/nav_header.html' %}
+        {% include 'juegos/includes/main_sidebar.html' %}
+        <div class="content-wrapper">
         <!-- Content Header -->
         <section class="content-header">
           <div class="container-fluid">
@@ -44,8 +43,11 @@
       </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
-  </body>
+    <!-- jQuery -->
+    <script src="{% static 'admin-lte/plugins/jquery/jquery.min.js' %}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{% static 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- AdminLTE -->
+    <script src="{% static 'admin-lte/dist/js/adminlte.min.js' %}"></script>
+</body>
 </html>
