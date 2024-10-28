@@ -1,62 +1,57 @@
-{% extends 'juegos/base.html' %} {% block title %}Categorías{% endblock %}
-{%block header %}Categorías{% endblock %} {% block content %}
+{% extends 'juegos/base.html' %}
+{% block title %}Categorías{% endblock %}
+{% block header %}Categorías{% endblock %}
+
+{% block content %}
 <div class="card">
-  <div class="card-header">
-    <h3 class="card-title">Lista de Categorías</h3>
-    <div class="card-tools">
-      <a href="{% url 'juegos:categoria_create' %}" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Nueva Categoría
-      </a>
+    <div class="card-header">
+        <h3 class="card-title">Lista de Categorías</h3>
+        {% if user.is_admin_role %}
+        <div class="card-tools">
+            <a href="{% url 'juegos:categoria_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nueva Categoría
+            </a>
+        </div>
+        {% endif %}
     </div>
-  </div>
-  <div class="card-body">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Imagen</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for categoria in categorias %}
-        <tr>
-          <td>{{ categoria.nombre }}</td>
-          <td>{{ categoria.descripcion|truncatewords:30 }}</td>
-          <td>
-            {% if categoria.imagen %}
-            <img
-              src="{{ categoria.imagen.url }}"
-              alt="{{ categoria.nombre }}"
-              style="max-height: 50px"
-            />
-            {% endif %}
-          </td>
-          <td>
-            <a
-              href="{% url 'juegos:categoria_update' categoria.pk %}"
-              class="btn btn-sm btn-warning"
-            >
-              <i class="fas fa-edit"></i>
-            </a>
-            <a
-              href="{% url 'juegos:categoria_delete' categoria.pk %}"
-              class="btn btn-sm btn-danger"
-            >
-              <i class="fas fa-trash"></i>
-            </a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="4" class="text-center">
-            No hay categorías registradas.
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    <div class="card-body">
+        <div class="row">
+            {% for categoria in categorias %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if categoria.imagen %}
+                    <img src="{{ categoria.imagen.url }}" class="card-img-top" alt="{{ categoria.nombre }}" 
+                         style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ categoria.nombre }}</h5>
+                        <p class="card-text">{{ categoria.descripcion|truncatewords:30 }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{% url 'juegos:categoria_detail' categoria.pk %}" class="btn btn-primary">
+                                <i class="fas fa-eye"></i> Ver Juegos
+                            </a>
+                            {% if user.is_admin_role %}
+                            <div>
+                                <a href="{% url 'juegos:categoria_update' categoria.pk %}" class="btn btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'juegos:categoria_delete' categoria.pk %}" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center text-muted">No hay categorías registradas.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}

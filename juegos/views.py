@@ -66,6 +66,16 @@ def categoria_list(request):
     categorias = Categoria.objects.all()
     return render(request, 'juegos/categoria/lista.html', {'categorias': categorias})
 
+def categoria_detail(request, pk):
+    categoria = get_object_or_404(Categoria, pk=pk)
+    juegos = Juego.objects.filter(categorias=categoria)  # Cambiado de categoria a categorias
+    context = {
+        'categoria': categoria,
+        'juegos': juegos,
+        'total_juegos': juegos.count()  # Añadido total_juegos
+    }
+    return render(request, 'juegos/categoria/detalle.html', context)
+
 
 @admin_required
 def categoria_create(request):

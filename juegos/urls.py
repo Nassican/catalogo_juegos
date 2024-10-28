@@ -18,6 +18,7 @@ urlpatterns = [
 
     # URLs para Categorías
     path('categorias/', views.categoria_list, name='categoria_list'),
+    path('categorias/<int:pk>/', views.categoria_detail, name='categoria_detail'),
     path('categorias/crear/', views.categoria_create, name='categoria_create'),
     path('categorias/editar/<int:pk>/',
          views.categoria_update, name='categoria_update'),
