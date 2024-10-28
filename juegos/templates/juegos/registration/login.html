@@ -7,26 +7,38 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
+                <h3 class="card-title text-center mb-4">Iniciar Sesión</h3>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% if next %}
+                    <div class="alert alert-info">
+                        Por favor inicia sesión para continuar.
+                    </div>
+                {% endif %}
                 <form method="post">
                     {% csrf_token %}
-                    <div class="form-group">
-                        <label for="id_username">Usuario</label>
-                        <input type="text" name="username" class="form-control" id="id_username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_password">Contraseña</label>
-                        <input type="password" name="password" class="form-control" id="id_password" required>
-                    </div>
-                    {% if form.errors %}
-                        <div class="alert alert-danger">
-                            Usuario o contraseña incorrectos.
+                    <input type="hidden" name="next" value="{{ next }}">
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger">{{ field.errors }}</div>
+                            {% endif %}
                         </div>
-                    {% endif %}
-                    <button type="submit" class="btn btn-primary">
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-block">
                         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
                     </button>
-                    <a href="{% url 'register' %}" class="btn btn-link">¿No tienes cuenta? Regístrate</a>
                 </form>
+                <div class="text-center mt-3">
+                    <p>¿No tienes cuenta? <a href="{% url 'juegos:register' %}">Regístrate aquí</a></p>
+                </div>
             </div>
         </div>
     </div>

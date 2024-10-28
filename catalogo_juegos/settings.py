@@ -130,3 +130,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Configuración de Login
+LOGIN_URL = 'juegos:login'
+LOGIN_REDIRECT_URL = 'juegos:dashboard'
+LOGOUT_REDIRECT_URL = 'juegos:login'

@@ -1,11 +1,17 @@
 from django.urls import path
 from . import views
+from django.contrib.auth.views import LogoutView
+from juegos.views import CustomLoginView
 
 app_name = 'juegos'
 
 urlpatterns = [
     # Dashboard
-    path('', views.dashboard, name='dashboard'),
+    path('', views.index, name='index'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(next_page='juegos:login'), name='logout'),
+    path('register/', views.register, name='register'),
 
     # URLs para Categorías
     path('categorias/', views.categoria_list, name='categoria_list'),

@@ -5,8 +5,14 @@ from .models import Categoria, Juego, Resena
 from .forms import CategoriaForm, JuegoForm, ResenaForm, CustomUserCreationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login
-
+from django.urls import reverse
 # Dashboard
+
+
+def index(request):
+    if request.user.is_authenticated:
+        return redirect('juegos:dashboard')
+    return redirect('juegos:login')
 
 
 @login_required
@@ -174,19 +180,23 @@ def resena_delete(request, pk):
     return render(request, 'juegos/resena/confirmar_eliminar.html', {'resena': resena})
 
 
-class CustomLoginView(LoginView):
-    template_name = 'registration/login.html'
-    redirect_authenticated_user = True
-
-
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, '¡Registro exitoso!')
+            messages.success(request, 'Registro exitoso.')
             return redirect('juegos:dashboard')
     else:
         form = CustomUserCreationForm()
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, 'juegos/registration/register.html', {'form': form})
+
+
+class CustomLoginView(LoginView):
+    template_name = 'juegos/registration/login.html'
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        messages.success(self.request, 'Inicio de sesión exitoso.')
+        return reverse('juegos:dashboard')
