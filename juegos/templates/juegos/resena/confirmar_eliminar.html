@@ -1,0 +1,22 @@
+{% extends 'juegos/base.html' %}
+{% block title %}Eliminar Juego{% endblock %}
+{% block header %}Eliminar Juego{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h5>¿Estás seguro de que deseas eliminar la reseña?</h5>
+        <div class="mt-3">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Sí, eliminar
+                </button>
+                <a href="{% url 'juegos:resena_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -59,11 +59,12 @@ class Juego(models.Model):
 class Resena(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     juego = models.ForeignKey(Juego, on_delete=models.CASCADE)
-    puntuacion = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    puntuacion = models.IntegerField()
     comentario = models.TextField()
-    fecha = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        unique_together = ['usuario', 'juego']  # Asegura que un usuario solo pueda hacer una reseña por juego
         verbose_name = "Reseña"
         verbose_name_plural = "Reseñas"
 

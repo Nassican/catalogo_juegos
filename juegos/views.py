@@ -103,7 +103,17 @@ def juego_list(request):
 def juego_detail(request, pk):
     juego = get_object_or_404(Juego, pk=pk)
     resenas = Resena.objects.filter(juego=juego)
-    return render(request, 'juegos/juego/detalle.html', {'juego': juego, 'resenas': resenas})
+    user_has_reviewed = False
+    
+    if request.user.is_authenticated:
+        user_has_reviewed = Resena.objects.filter(juego=juego, usuario=request.user).exists()
+    
+    context = {
+        'juego': juego,
+        'resenas': resenas,
+        'user_has_reviewed': user_has_reviewed
+    }
+    return render(request, 'juegos/juego/detalle.html', context)
 
 
 @login_required
@@ -154,6 +164,13 @@ def resena_list(request):
 @login_required
 def resena_create(request, juego_id):
     juego = get_object_or_404(Juego, id=juego_id)
+    
+    # Verificar si el usuario ya tiene una reseña para este juego
+    existing_review = Resena.objects.filter(usuario=request.user, juego=juego).exists()
+    if existing_review:
+        messages.error(request, 'Ya has publicado una reseña para este juego.')
+        return redirect('juegos:juego_detail', pk=juego_id)
+        
     if request.method == 'POST':
         form = ResenaForm(request.POST)
         if form.is_valid():
