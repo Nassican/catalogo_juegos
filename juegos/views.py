@@ -42,11 +42,20 @@ def user_update(request):
 def dashboard(request):
     total_juegos = Juego.objects.count()
     total_categorias = Categoria.objects.count()
-    total_resenas = Resena.objects.count()
+    
+    if request.user.is_admin_role():
+        total_resenas = Resena.objects.count()
+        resenas = None
+    else:
+        # Para usuarios normales, mostrar solo sus reseñas
+        resenas = Resena.objects.filter(usuario=request.user).order_by('-fecha_creacion')[:5]
+        total_resenas = resenas.count()
+    
     context = {
         'total_juegos': total_juegos,
         'total_categorias': total_categorias,
         'total_resenas': total_resenas,
+        'resenas': resenas,
     }
     return render(request, 'juegos/dashboard.html', context)
 

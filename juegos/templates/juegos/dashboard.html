@@ -118,6 +118,11 @@
                                     <i class="fas fa-star"></i> Todas las Reseñas
                                 </a>
                             </div>
+                            <div class="col-md-3">
+                                <a href="{% url 'juegos:user_update' %}" class="btn btn-info btn-block mb-3">
+                                    <i class="fas fa-user-edit"></i> Editar Perfil
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -149,6 +154,46 @@
                                 </a>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mis Últimas Reseñas -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-star"></i> Mis Últimas Reseñas
+                            <a href="{% url 'juegos:resena_list' %}" class="btn btn-sm btn-outline-primary float-right">
+                                Ver todas
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if resenas %}
+                            {% for resena in resenas %}
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h5><a href="{% url 'juegos:juego_detail' resena.juego.pk %}">{{ resena.juego.titulo }}</a></h5>
+                                        <div class="mb-2">
+                                            {% for i in "12345"|make_list %}
+                                                {% if forloop.counter <= resena.puntuacion %}
+                                                    <i class="fas fa-star text-warning"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <p>{{ resena.comentario }}</p>
+                                        <small class="text-muted">{{ resena.fecha_creacion }}</small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No has escrito ninguna reseña todavía.</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
