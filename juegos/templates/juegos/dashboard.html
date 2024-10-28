@@ -3,26 +3,79 @@
 {% block header %}Panel de Control{% endblock %}
 
 {% block content %}
-<div class="container-fluid max-width-100">
+<div class="container py-4">
     <!-- Información del Usuario -->
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-2 text-center">
-                            {% if user.foto %}
-                                <img src="{{ user.foto.url }}" alt="Foto de perfil" class="img-fluid rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
-                            {% else %}
-                                <i class="fas fa-user-circle fa-5x"></i>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-10">
-                            <h2 class="mb-0">¡Bienvenido, {{ user.get_full_name|default:user.username }}!</h2>
-                            <p class="mb-0">{{ user.email }}</p>
-                            <a href="{% url 'juegos:user_detail' user.username %}" class="btn btn-outline-light mt-2">
-                                <i class="fas fa-user"></i> Ver Perfil
-                            </a>
+    <div class="row justify-content-center mb-4">
+        <div class="col-xl-10">
+            <div class="card bg-gradient-primary text-white shadow-lg rounded-lg overflow-hidden">
+                <div class="card-body position-relative p-0">
+                    <!-- Fondo decorativo con patrón mejorado -->
+                    <div class="position-absolute w-100 h-100" 
+                         style="background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+                                background-size: cover;
+                                opacity: 0.15;">
+                    </div>
+                    
+                    <div class="position-relative p-4">
+                        <div class="row align-items-center">
+                            <!-- Columna de la foto con mejor espaciado -->
+                            <div class="col-auto pe-md-4 mb-3 mb-md-0">
+                                <div class="col-auto pr-4">
+                                <div class="position-relative">
+                                    {% if user.foto %}
+                                        <img src="{{ user.foto.url }}" alt="Foto de perfil" 
+                                             class="rounded-circle shadow-lg border border-white" 
+                                             style="width: 120px; height: 120px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-white p-4 shadow-lg">
+                                            <i class="fas fa-user-circle fa-4x text-primary"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Badge de rol -->
+                                    <div class="position-absolute" style="bottom: -10px; right: -10px;">
+                                        {% if user.is_admin_role %}
+                                            <span class="badge badge-danger p-2 rounded-pill shadow-sm">
+                                                <i class="fas fa-crown mr-2"></i> Administrador
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-light p-2 rounded-pill shadow-sm">
+                                                <i class="fas fa-user mr-2"></i> Usuario
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            
+                            <!-- Columna de información con mejor adaptabilidad -->
+                            <div class="col">
+                                <div class="welcome-info">
+                                    <div class="mb-3">
+                                        <h2 class="display-4 mb-2 font-weight-bold text-white" style="font-size: calc(1.5rem + 1.5vw);">
+                                            ¡Bienvenido,
+                                            <span class="d-inline-block">
+                                                {{ user.get_full_name|default:user.username }}!
+                                            </span>
+                                        </h2>
+                                        <p class="lead mb-0 text-white-50 d-flex align-items-center flex-wrap">
+                                            <i class="fas fa-envelope me-2 mr-2"></i>
+                                            <span class="text-break">{{ user.email }}</span>
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="mt-4 d-flex flex-wrap gap-2">
+                                        <a href="{% url 'juegos:user_detail' user.username %}" 
+                                           class="btn btn-light btn-lg shadow-sm hover-lift">
+                                            <i class="fas fa-user me-2"></i> Ver Perfil
+                                        </a>
+                                        <a href="{% url 'juegos:user_update' %}" 
+                                           class="btn btn-outline-light btn-lg shadow-sm hover-lift">
+                                            <i class="fas fa-edit me-2"></i> Editar Perfil
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -31,173 +84,311 @@
     </div>
 
     <!-- Estadísticas Principales -->
-    <div class="row">
-        <div class="col-lg-4 col-md-6">
-            <div class="card bg-info text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h3 class="display-4 mb-0">{{ total_juegos }}</h3>
-                            <div class="text-white">Juegos</div>
-                        </div>
-                        <div>
-                            <i class="fas fa-gamepad fa-3x opacity-50"></i>
+    <div class="row justify-content-center mb-4">
+        <div class="col-xl-10">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card bg-gradient-info text-white shadow-sm hover-shadow-lg transition-all">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="display-4 mb-0 font-weight-bold">{{ total_juegos }}</h3>
+                                    <div class="text-white-100 font-weight-bold">Juegos</div>
+                                </div>
+                                <div class="rounded-circle bg-white p-3">
+                                    <i class="fas fa-gamepad fa-2x text-info"></i>
+                                </div>
+                            </div>
+                            <a href="{% url 'juegos:juego_list' %}" class="btn btn-light btn-block mt-3">
+                                Ver Detalles <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="text-white stretched-link" href="{% url 'juegos:juego_list' %}">Ver Detalles</a>
-                    <div class="text-white"><i class="fas fa-angle-right"></i></div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-lg-4 col-md-6">
-            <div class="card bg-success text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h3 class="display-4 mb-0">{{ total_categorias }}</h3>
-                            <div class="text-white">Categorías</div>
-                        </div>
-                        <div>
-                            <i class="fas fa-tags fa-3x opacity-50"></i>
+                <div class="col-md-4">
+                    <div class="card bg-gradient-success text-white shadow-sm hover-shadow-lg transition-all">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="display-4 mb-0 font-weight-bold">{{ total_categorias }}</h3>
+                                    <div class="text-white-100 font-weight-bold">Categorías</div>
+                                </div>
+                                <div class="rounded-circle bg-white p-3">
+                                    <i class="fas fa-tags fa-2x text-success"></i>
+                                </div>
+                            </div>
+                            <a href="{% url 'juegos:categoria_list' %}" class="btn btn-light btn-block mt-3">
+                                Ver Detalles <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="text-white stretched-link" href="{% url 'juegos:categoria_list' %}">Ver Detalles</a>
-                    <div class="text-white"><i class="fas fa-angle-right"></i></div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-lg-4 col-md-6">
-            <div class="card bg-warning text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h3 class="display-4 mb-0">{{ total_resenas }}</h3>
-                            <div class="text-white">Reseñas</div>
-                        </div>
-                        <div>
-                            <i class="fas fa-star fa-3x opacity-50"></i>
+                <div class="col-md-4">
+                    <div class="card bg-gradient-warning text-white shadow-sm hover-shadow-lg transition-all">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="display-4 mb-0 font-weight-bold">{{ total_resenas }}</h3>
+                                    <div class="text-white-100 font-weight-bold">Reseñas</div>
+                                </div>
+                                <div class="rounded-circle bg-white p-3">
+                                    <i class="fas fa-star fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                            <a href="{% url 'juegos:resena_list' %}" class="btn btn-light btn-block mt-3">
+                                Ver Detalles <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="text-white stretched-link" href="{% url 'juegos:resena_list' %}">Ver Detalles</a>
-                    <div class="text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
         </div>
     </div>
 
     {% if user.is_admin_role %}
-        <!-- Panel de Administración -->
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-cogs"></i> Panel de Administración</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <a href="{% url 'juegos:juego_create' %}" class="btn btn-primary btn-block mb-3">
-                                    <i class="fas fa-plus-circle"></i> Nuevo Juego
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="{% url 'juegos:categoria_create' %}" class="btn btn-success btn-block mb-3">
-                                    <i class="fas fa-folder-plus"></i> Nueva Categoría
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="{% url 'juegos:resena_list' %}" class="btn btn-warning btn-block mb-3">
-                                    <i class="fas fa-star"></i> Todas las Reseñas
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="{% url 'juegos:user_update' %}" class="btn btn-info btn-block mb-3">
-                                    <i class="fas fa-user-edit"></i> Editar Perfil
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Panel de Administración -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-xl-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0"><i class="fas fa-cogs text-primary"></i> Panel de Administración</h4>
                 </div>
-            </div>
-        </div>
-    {% else %}
-        <!-- Panel de Usuario -->
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-user"></i> Acciones de Usuario</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <a href="{% url 'juegos:juego_list' %}" class="btn btn-primary btn-block mb-3">
-                                    <i class="fas fa-gamepad"></i> Ver Juegos
-                                </a>
-                            </div>
-                            <div class="col-md-4">
-                                <a href="{% url 'juegos:resena_list' %}" class="btn btn-warning btn-block mb-3">
-                                    <i class="fas fa-star"></i> Mis Reseñas
-                                </a>
-                            </div>
-                            <div class="col-md-4">
-                                <a href="{% url 'juegos:user_update' %}" class="btn btn-info btn-block mb-3">
-                                    <i class="fas fa-user-edit"></i> Editar Perfil
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mis Últimas Reseñas -->
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-star"></i> Mis Últimas Reseñas
-                            <a href="{% url 'juegos:resena_list' %}" class="btn btn-sm btn-outline-primary float-right">
-                                Ver todas
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="{% url 'juegos:juego_create' %}" class="card bg-light text-center p-4 text-decoration-none hover-shadow transition-all">
+                                <i class="fas fa-plus-circle fa-3x text-primary mb-3"></i>
+                                <h5 class="text-dark">Nuevo Juego</h5>
                             </a>
-                        </h5>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'juegos:categoria_create' %}" class="card bg-light text-center p-4 text-decoration-none hover-shadow transition-all">
+                                <i class="fas fa-folder-plus fa-3x text-success mb-3"></i>
+                                <h5 class="text-dark">Nueva Categoría</h5>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'juegos:resena_list' %}" class="card bg-light text-center p-4 text-decoration-none hover-shadow transition-all">
+                                <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                                <h5 class="text-dark">Todas las Reseñas</h5>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'juegos:user_update' %}" class="card bg-light text-center p-4 text-decoration-none hover-shadow transition-all">
+                                <i class="fas fa-user-edit fa-3x text-info mb-3"></i>
+                                <h5 class="text-dark">Editar Perfil</h5>
+                            </a>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        {% if resenas %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Panel de Usuario -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-xl-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0"><i class="fas fa-user text-primary mr-2"></i> Acciones Rápidas</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a href="{% url 'juegos:juego_list' %}" class="card bg-light text-center p-4 text-decoration-none hover-shadow transition-all">
+                                <i class="fas fa-gamepad fa-3x text-primary mb-3"></i>
+                                <h5 class="text-dark">Explorar Juegos</h5>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{% url 'juegos:resena_list' %}" class="card bg-light text-center p-4 text-decoration-none hover-shadow transition-all">
+                                <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                                <h5 class="text-dark">Mis Reseñas</h5>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{% url 'juegos:user_update' %}" class="card bg-light text-center p-4 text-decoration-none hover-shadow transition-all">
+                                <i class="fas fa-user-edit fa-3x text-info mb-3"></i>
+                                <h5 class="text-dark">Editar Perfil</h5>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mis Últimas Reseñas -->
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="card shadow-sm border-0 rounded-lg overflow-hidden">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-star text-warning me-2 mr-2"></i>
+                            <h4 class="mb-0">Mis Últimas Reseñas</h4>
+                        </div>
+                        <a href="{% url 'juegos:resena_list' %}" 
+                        class="btn btn-primary btn-sm rounded-pill hover-lift">
+                            Ver todas <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    {% if resenas %}
+                        <div class="row g-4">
                             {% for resena in resenas %}
-                                <div class="card mb-3">
-                                    <div class="card-body">
-                                        <h5><a href="{% url 'juegos:juego_detail' resena.juego.pk %}">{{ resena.juego.titulo }}</a></h5>
-                                        <div class="mb-2">
-                                            {% for i in "12345"|make_list %}
-                                                {% if forloop.counter <= resena.puntuacion %}
-                                                    <i class="fas fa-star text-warning"></i>
-                                                {% else %}
-                                                    <i class="far fa-star"></i>
-                                                {% endif %}
-                                            {% endfor %}
+                                <div class="col-md-6">
+                                    <div class="card h-100 border-0 shadow-hover rounded-lg transition-all">
+                                        <div class="card-body p-4">
+                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                <h5 class="mb-0">
+                                                    <a href="{% url 'juegos:juego_detail' resena.juego.pk %}" 
+                                                       class="text-decoration-none text-primary hover-text">
+                                                        {{ resena.juego.titulo }}
+                                                    </a>
+                                                </h5>
+                                                <span class="badge bg-primary rounded-pill">
+                                                    {{ resena.fecha_creacion|date:"d/m/Y" }}
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="rating-stars mb-3">
+                                                {% for i in "12345"|make_list %}
+                                                    {% if forloop.counter <= resena.puntuacion %}
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star text-warning"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            
+                                            <p class="card-text text-muted mb-0">
+                                                {{ resena.comentario|truncatewords:30 }}
+                                            </p>
+                                            
+                                            <div class="mt-3 pt-3 border-top">
+                                                <a href="{% url 'juegos:resena_update' resena.pk %}" 
+                                                   class="btn btn-sm btn-outline-primary me-2">
+                                                    <i class="fas fa-edit"></i> Editar
+                                                </a>
+                                                <a href="{% url 'juegos:juego_detail' resena.juego.pk %}" 
+                                                   class="btn btn-sm btn-link text-muted">
+                                                    Ver juego <i class="fas fa-chevron-right ms-1"></i>
+                                                </a>
+                                            </div>
                                         </div>
-                                        <p>{{ resena.comentario }}</p>
-                                        <small class="text-muted">{{ resena.fecha_creacion }}</small>
                                     </div>
                                 </div>
                             {% endfor %}
-                        {% else %}
-                            <p class="text-muted">No has escrito ninguna reseña todavía.</p>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="empty-state-icon mb-4">
+                                <i class="fas fa-comment-alt fa-4x text-muted opacity-50"></i>
+                            </div>
+                            <h5 class="text-muted mb-3">No has escrito ninguna reseña todavía</h5>
+                            <p class="text-muted mb-4">¡Comienza compartiendo tu opinión sobre los juegos!</p>
+                            <a href="{% url 'juegos:juego_list' %}" 
+                               class="btn btn-primary btn-lg rounded-pill hover-lift">
+                                <i class="fas fa-gamepad me-2"></i>
+                                Explorar juegos para reseñar
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
+    </div>
     {% endif %}
 </div>
+
+<style>
+.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15)!important;
+}
+.transition-all {
+    transition: all .3s ease;
+}
+.hover-shadow-lg {
+    transition: all .3s ease;
+}
+.hover-shadow-lg:hover {
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+}
+.bg-gradient-primary {
+    background: linear-gradient(45deg, #4e73df 0%, #224abe 100%)!important;
+}
+.bg-gradient-info {
+    background: linear-gradient(45deg, #36b9cc 0%, #1a8997 100%)!important;
+}
+.bg-gradient-success {
+    background: linear-gradient(45deg, #1cc88a 0%, #13855c 100%)!important;
+}
+.bg-gradient-warning {
+    background: linear-gradient(45deg, #f6c23e 0%, #dda20a 100%)!important;
+}
+.avatar-wrapper {
+    transition: transform 0.3s ease;
+}
+.avatar-wrapper:hover {
+    transform: translateY(-5px);
+}
+.avatar-status {
+    transform: translateY(50%);
+}
+.transform-up {
+    transform: translateY(25%);
+}
+.hover-lift {
+    transition: all 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+}
+.welcome-info {
+    max-width: 100%;
+    word-wrap: break-word;
+}
+.gap-2 {
+    gap: 0.5rem;
+}
+@media (max-width: 576px) {
+    .avatar-wrapper img,
+    .avatar-wrapper .rounded-circle {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    .display-4 {
+        font-size: calc(1.2rem + 1.5vw) !important;
+    }
+}
+.shadow-hover {
+    transition: all 0.3s ease;
+}
+.shadow-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.08) !important;
+}
+.hover-text:hover {
+    color: #0056b3 !important;
+}
+.rating-stars i {
+    margin-right: 0.25rem;
+}
+.empty-state-icon {
+    height: 100px;
+    width: 100px;
+    background: rgba(0,0,0,0.03);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+</style>
 {% endblock %}
