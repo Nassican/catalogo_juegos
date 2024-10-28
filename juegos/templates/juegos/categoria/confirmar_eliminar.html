@@ -1,0 +1,17 @@
+{% extends 'juegos/base.html' %} {% block title %}Eliminar Categoría {% endblock %}
+{% block header %}Eliminar Categoría{% endblock %} {% block content %}
+<div class="card">
+  <div class="card-body">
+    <h5>
+      ¿Estás seguro de que deseas eliminar la categoría "{{categoria.nombre}}"?
+    </h5>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+      <a href="{% url 'juegos:categoria_list' %}" class="btn btn-secondary"
+        >Cancelar</a
+      >
+    </form>
+  </div>
+</div>
+{% endblock %}

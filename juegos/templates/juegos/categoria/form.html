@@ -1,0 +1,75 @@
+{% extends 'juegos/base.html' %} {% block title %}{{ action }}
+Categoría{%endblock %} {% block header %}{{ action }} Categoría{% endblock %}
+{%block content %}
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">{{ action }} Categoría</h3>
+  </div>
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- Campo Nombre -->
+      <div class="form-group">
+        <label for="{{ form.nombre.id_for_label }}"
+          >{{ form.nombre.label }}</label
+        >
+        {{ form.nombre }} {% if form.nombre.errors %}
+        <div class="text-danger">{{ form.nombre.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Campo Descripción -->
+      <div class="form-group">
+        <label for="{{ form.descripcion.id_for_label }}"
+          >{{ form.descripcion.label }}</label
+        >
+        {{ form.descripcion }} {% if form.descripcion.errors %}
+        <div class="text-danger">{{ form.descripcion.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Campo Imagen -->
+      <div class="form-group">
+        <label for="{{ form.imagen.id_for_label }}"
+          >{{ form.imagen.label }}</label
+        >
+        <div class="input-group">
+          <div class="custom-file">
+            {{ form.imagen }}
+            <label
+              class="custom-file-label"
+              for="{{ form.imagen.id_for_label }}"
+            >
+              {% if form.imagen.value %}{{ form.imagen.value }}{% else %}Elegir
+              archivo{% endif %}
+            </label>
+          </div>
+        </div>
+        {% if form.imagen.errors %}
+        <div class="text-danger">{{ form.imagen.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save"></i> {{ action }}
+        </button>
+        <a href="{% url 'juegos:categoria_list' %}" class="btn btn-secondary">
+          <i class="fas fa-times"></i> Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  $(document).ready(function () {
+    // Para mostrar el nombre del archivo seleccionado
+    $(".custom-file-input").on("change", function () {
+      var fileName = $(this).val().split("\\").pop();
+      $(this).next(".custom-file-label").html(fileName);
+    });
+  });
+</script>
+{% endblock %}

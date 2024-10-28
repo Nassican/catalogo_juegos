@@ -1,0 +1,62 @@
+{% extends 'juegos/base.html' %}
+{% block title %}Reseñas{% endblock %}
+{% block header %}Reseñas{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Lista de Reseñas</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Juego</th>
+                    <th>Usuario</th>
+                    <th>Puntuación</th>
+                    <th>Comentario</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resena in resenas %}
+                <tr>
+                    <td>
+                        <a href="{% url 'juegos:juego_detail' resena.juego.pk %}">
+                            {{ resena.juego.titulo }}
+                        </a>
+                    </td>
+                    <td>{{ resena.usuario.get_full_name|default:resena.usuario.username }}</td>
+                    <td>
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= resena.puntuacion %}
+                                <i class="fas fa-star text-warning"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ resena.comentario|truncatewords:30 }}</td>
+                    <td>{{ resena.fecha_creacion }}</td>
+                    <td>
+                        {% if request.user == resena.usuario %}
+                            <a href="{% url 'juegos:resena_update' resena.pk %}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'juegos:resena_delete' resena.pk %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No hay reseñas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

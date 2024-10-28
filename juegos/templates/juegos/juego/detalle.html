@@ -1,0 +1,107 @@
+{% extends 'juegos/base.html' %}
+{% block title %}{{ juego.titulo }}{% endblock %}
+{% block header %}Detalle del Juego{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">{{ juego.titulo }}</h3>
+        <div class="card-tools">
+            <a href="{% url 'juegos:juego_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+            <a href="{% url 'juegos:juego_update' juego.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <!-- Imagen del juego -->
+            <div class="col-md-4">
+                {% if juego.imagen %}
+                    <img src="{{ juego.imagen.url }}" alt="{{ juego.titulo }}" class="img-fluid">
+                {% else %}
+                    <div class="text-center p-4 bg-light">
+                        <i class="fas fa-image fa-4x text-muted"></i>
+                        <p class="mt-2">Sin imagen</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Información del juego -->
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-sm-3">Desarrollador</dt>
+                    <dd class="col-sm-9">{{ juego.desarrollador }}</dd>
+
+                    <dt class="col-sm-3">Fecha de Lanzamiento</dt>
+                    <dd class="col-sm-9">{{ juego.fecha_lanzamiento }}</dd>
+
+                    <dt class="col-sm-3">Precio</dt>
+                    <dd class="col-sm-9">${{ juego.precio }}</dd>
+
+                    <dt class="col-sm-3">Categorías</dt>
+                    <dd class="col-sm-9">
+                        {% for categoria in juego.categorias.all %}
+                            <span class="badge badge-info">{{ categoria.nombre }}</span>
+                        {% endfor %}
+                    </dd>
+
+                    <dt class="col-sm-3">Descripción</dt>
+                    <dd class="col-sm-9">{{ juego.descripcion }}</dd>
+
+                    <dt class="col-sm-3">Requisitos</dt>
+                    <dd class="col-sm-9">{{ juego.requisitos|linebreaks }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Sección de Reseñas -->
+        <div class="mt-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4>Reseñas</h4>
+                <a href="{% url 'juegos:resena_create' juego.pk %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Añadir Reseña
+                </a>
+            </div>
+            
+            {% if resenas %}
+                {% for resena in resenas %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5>{{ resena.usuario.get_full_name|default:resena.usuario.username }}</h5>
+                                <div>
+                                    {% for i in "12345"|make_list %}
+                                        {% if forloop.counter <= resena.puntuacion %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p>{{ resena.comentario }}</p>
+                            <small class="text-muted">{{ resena.fecha_creacion }}</small>
+                            
+                            {% if request.user == resena.usuario %}
+                                <div class="mt-2">
+                                    <a href="{% url 'juegos:resena_update' resena.pk %}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+                                    <a href="{% url 'juegos:resena_delete' resena.pk %}" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No hay reseñas para este juego.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

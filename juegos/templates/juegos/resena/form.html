@@ -1,0 +1,43 @@
+{% extends 'juegos/base.html' %}
+{% block title %}{{ action|default:'Crear' }} Reseña - {{ juego.titulo }}{% endblock %}
+{% block header %}{{ action|default:'Crear' }} Reseña{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Reseña para: {{ juego.titulo }}</h3>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Puntuación -->
+            <div class="form-group">
+                <label for="{{ form.puntuacion.id_for_label }}">{{ form.puntuacion.label }}</label>
+                {{ form.puntuacion }}
+                {% if form.puntuacion.errors %}
+                    <div class="text-danger">{{ form.puntuacion.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Comentario -->
+            <div class="form-group">
+                <label for="{{ form.comentario.id_for_label }}">{{ form.comentario.label }}</label>
+                {{ form.comentario }}
+                {% if form.comentario.errors %}
+                    <div class="text-danger">{{ form.comentario.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> {{ action|default:'Crear' }}
+                </button>
+                <a href="{% url 'juegos:juego_detail' juego.pk %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

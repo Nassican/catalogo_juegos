@@ -1,0 +1,60 @@
+{% extends 'juegos/base.html' %}
+{% block title %}Juegos{% endblock %}
+{% block header %}Juegos{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Lista de Juegos</h3>
+        <div class="card-tools">
+            <a href="{% url 'juegos:juego_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nuevo Juego
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Desarrollador</th>
+                    <th>Precio</th>
+                    <th>Imagen</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for juego in juegos %}
+                <tr>
+                    <td>
+                        <a href="{% url 'juegos:juego_detail' juego.pk %}">{{ juego.titulo }}</a>
+                    </td>
+                    <td>{{ juego.desarrollador }}</td>
+                    <td>${{ juego.precio }}</td>
+                    <td>
+                        {% if juego.imagen %}
+                            <img src="{{ juego.imagen.url }}" alt="{{ juego.titulo }}" style="max-height: 50px">
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'juegos:juego_detail' juego.pk %}" class="btn btn-sm btn-info">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{% url 'juegos:juego_update' juego.pk %}" class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'juegos:juego_delete' juego.pk %}" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay juegos registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

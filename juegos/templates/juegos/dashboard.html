@@ -1,0 +1,41 @@
+{% extends 'juegos/base.html' %} {% block content %}
+<h1 class="mb-4">Dashboard</h1>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Juegos</h5>
+        <p class="card-text display-4">{{ total_juegos }}</p>
+        <a href="{% url 'juegos:juego_list' %}" class="btn btn-primary"
+          >Ver Juegos</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Categorías</h5>
+        <p class="card-text display-4">{{ total_categorias }}</p>
+        <a href="{% url 'juegos:categoria_list' %}" class="btn btn-primary"
+          >Ver Categorías</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Reseñas</h5>
+        <p class="card-text display-4">{{ total_resenas }}</p>
+        <a href="{% url 'juegos:resena_list' %}" class="btn btn-primary"
+          >Ver Reseñas</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

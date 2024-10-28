@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Catálogo de Juegos{% endblock %}</title>
+
+    <!-- AdminLTE y dependencias -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/adminlte.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+      <!-- Incluir el sidebar -->
+      {% include 'juegos/includes/main_sidebar.html' %}
+
+      <!-- Content Wrapper -->
+      <div class="content-wrapper">
+        <!-- Content Header -->
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1>{% block header %}{% endblock %}</h1>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <div class="container-fluid">
+            {% if messages %} {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %} {% endif %} {% block content %}{% endblock %}
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
+  </body>
+</html>
