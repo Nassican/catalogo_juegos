@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+import os
+
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100)
@@ -11,6 +13,14 @@ class Categoria(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    def delete(self, *args, **kwargs):
+        # Eliminar la imagen si existe
+        if self.imagen:
+            if os.path.isfile(self.imagen.path):
+                os.remove(self.imagen.path)
+        super().delete(*args, **kwargs)
+
 
 class Juego(models.Model):
     titulo = models.CharField(max_length=200)
@@ -25,6 +35,14 @@ class Juego(models.Model):
 
     def __str__(self):
         return self.titulo
+
+    def delete(self, *args, **kwargs):
+        # Eliminar la imagen si existe
+        if self.imagen:
+            if os.path.isfile(self.imagen.path):
+                os.remove(self.imagen.path)
+        super().delete(*args, **kwargs)
+
 
 class Resena(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)

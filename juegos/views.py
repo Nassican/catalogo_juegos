@@ -66,11 +66,10 @@ def categoria_update(request, pk):
 def categoria_delete(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
     if request.method == 'POST':
-        categoria.delete()
+        categoria.delete()  # Esto llamará al método delete personalizado
         messages.success(request, 'Categoría eliminada exitosamente.')
         return redirect('juegos:categoria_list')
     return render(request, 'juegos/categoria/confirmar_eliminar.html', {'categoria': categoria})
-
 # Vistas para Juego
 
 
@@ -116,7 +115,7 @@ def juego_update(request, pk):
 def juego_delete(request, pk):
     juego = get_object_or_404(Juego, pk=pk)
     if request.method == 'POST':
-        juego.delete()
+        juego.delete()  # Esto llamará al método delete personalizado
         messages.success(request, 'Juego eliminado exitosamente.')
         return redirect('juegos:juego_list')
     return render(request, 'juegos/juego/confirmar_eliminar.html', {'juego': juego})
