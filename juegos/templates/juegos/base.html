@@ -36,20 +36,22 @@
         <section class="content">
           <div class="container-fluid">
             {% if messages %}
-            <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
+            <div class="container mt-3">
                 {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    <div class="d-flex align-items-center">
-                        {% if message.tags == 'success' %}
-                            <i class="fas fa-check-circle me-2 mr-2"></i>
-                        {% elif message.tags == 'error' %}
-                            <i class="fas fa-exclamation-circle me-2 mr-2"></i>
-                        {% endif %}
-                        {{ message }}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle me-2 mr-2"></i>
+                            {% elif message.tags == 'error' %}
+                                <i class="fas fa-exclamation-circle me-2 mr-2"></i>
+                            {% endif %}
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn border-0 p-0 text-light" data-dismiss="alert" aria-label="Close">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 {% endfor %}
             </div>
@@ -69,21 +71,12 @@
     {% block extra_js %}
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Auto-cerrar mensajes después de 3 segundos
-        const alerts = document.querySelectorAll('.alert');
-        alerts.forEach(function(alert) {
-            setTimeout(function() {
-                $(alert).fadeOut('slow', function() {
-                    $(this).remove();
-                });
-            }, 3000);
-        });
-
-        // Permitir cerrar mensajes manualmente
-        $('.alert .close').on('click', function() {
-            $(this).closest('.alert').fadeOut('slow', function() {
-                $(this).remove();
-            });
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 3000);
+        
+        $('.btn-close').click(function() {
+            $(this).closest('.alert').fadeOut('slow');
         });
     });
     </script>

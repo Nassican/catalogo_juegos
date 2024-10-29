@@ -211,7 +211,6 @@ def resena_create(request, juego_id):
 @login_required
 def resena_update(request, pk):
     resena = get_object_or_404(Resena, pk=pk)
-    # Permitir edición si es el dueño de la reseña o es admin
     if request.user != resena.usuario and not request.user.is_admin_role():
         messages.error(request, 'No tienes permiso para editar esta reseña.')
         return redirect('juegos:juego_detail', pk=resena.juego.pk)
@@ -221,10 +220,19 @@ def resena_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Reseña actualizada exitosamente.')
+            # Usar el parámetro next para la redirección
+            next_url = request.GET.get('next')
+            if next_url == 'resena_list':
+                return redirect('juegos:resena_list')
             return redirect('juegos:juego_detail', pk=resena.juego.pk)
     else:
         form = ResenaForm(instance=resena)
-    return render(request, 'juegos/resena/form.html', {'form': form, 'action': 'Editar', 'juego': resena.juego})
+    return render(request, 'juegos/resena/form.html', {
+        'form': form, 
+        'action': 'Editar', 
+        'juego': resena.juego,
+        'next': request.GET.get('next')
+    })
 
 
 @login_required
