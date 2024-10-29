@@ -1,6 +1,7 @@
 from django import forms
 from .models import Categoria, Juego, Resena, User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
 
 
 class CategoriaForm(forms.ModelForm):
@@ -83,15 +84,81 @@ class ResenaForm(forms.ModelForm):
         }
 
 
-class CustomUserCreationForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = User
-        fields = ('username', 'email', 'password1', 'password2', 'role')
+class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(
+        label='',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control form-control-lg',
+            'placeholder': 'Nombre de usuario',
+            'autofocus': True,
+            'autocomplete': 'username'
+        })
+    )
+    password = forms.CharField(
+        label='',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control form-control-lg',
+            'placeholder': 'Contraseña',
+            'autocomplete': 'current-password'
+        })
+    )
+
+    error_messages = {
+        'invalid_login': 'Por favor, introduce un nombre de usuario y contraseña correctos.',
+        'inactive': 'Esta cuenta está inactiva.'
+    }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not kwargs.get('initial', {}).get('is_admin'):
-            self.fields.pop('role')
+        self.fields['username'].widget.attrs['class'] = 'form-control form-control-lg mb-3'
+        self.fields['password'].widget.attrs['class'] = 'form-control form-control-lg mb-3'
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(
+        label='',
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control form-control-lg mb-3',
+            'placeholder': 'Correo electrónico',
+            'autocomplete': 'email'
+        })
+    )
+    username = forms.CharField(
+        label='',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control form-control-lg mb-3',
+            'placeholder': 'Nombre de usuario',
+            'autocomplete': 'username'
+        })
+    )
+    password1 = forms.CharField(
+        label='',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control form-control-lg mb-3',
+            'placeholder': 'Contraseña',
+            'autocomplete': 'new-password'
+        })
+    )
+    password2 = forms.CharField(
+        label='',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control form-control-lg mb-3',
+            'placeholder': 'Confirmar contraseña',
+            'autocomplete': 'new-password'
+        })
+    )
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.error_messages = {'required': 'Este campo es obligatorio'}
+            if field.help_text:
+                field.help_text = f'<small class="text-muted">{field.help_text}</small>'
+
+
 
 
 class UserUpdateForm(forms.ModelForm):

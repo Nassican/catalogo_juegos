@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Categoria, Juego, Resena, User
-from .forms import CategoriaForm, JuegoForm, ResenaForm, CustomUserCreationForm, UserUpdateForm
+from .forms import CategoriaForm, JuegoForm, ResenaForm, CustomUserCreationForm, UserUpdateForm, CustomAuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login
 from django.urls import reverse
@@ -251,24 +251,32 @@ def resena_delete(request, pk):
     return render(request, 'juegos/resena/confirmar_eliminar.html', {'resena': resena})
 
 
-def register(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Registro exitoso.')
-            return redirect('juegos:dashboard')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'juegos/registration/register.html', {'form': form})
-
-
 class CustomLoginView(LoginView):
+    form_class = CustomAuthenticationForm
     template_name = 'juegos/registration/login.html'
     redirect_authenticated_user = True
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Usuario o contraseña incorrectos.')
+        return super().form_invalid(form)
 
     def get_success_url(self):
         messages.success(self.request, 'Inicio de sesión exitoso.')
         return reverse('juegos:dashboard')
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.email = form.cleaned_data['email']
+            user.save()
+            login(request, user)
+            messages.success(request, 'Registro exitoso. ¡Bienvenido!')
+            return redirect('juegos:dashboard')
+        else:
+            messages.error(request, 'Por favor corrige los errores en el formulario.')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'juegos/registration/register.html', {'form': form})
 

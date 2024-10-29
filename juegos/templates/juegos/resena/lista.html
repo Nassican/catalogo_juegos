@@ -32,6 +32,9 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead class="bg-light">
                                 <tr>
+                                    {% if user.is_superuser %}
+                                    <th class="px-4">Usuario</th>
+                                    {% endif %}
                                     <th class="px-4">Juego</th>
                                     <th class="text-center d-none d-md-table-cell">Puntuación</th>
                                     <th>Comentario</th>
@@ -42,6 +45,10 @@
                             <tbody>
                                 {% for resena in resenas %}
                                 <tr class="hover-row">
+                                    {% if user.is_superuser %}
+                                    <td class="px-4">{{ resena.usuario.username }}</td>
+                                    {% endif %}
+
                                     <td class="px-4">
                                         <div class="d-flex align-items-center">
                                             <div class="game-image-wrapper mr-3">
@@ -85,16 +92,25 @@
                                     </td>
                                     <td>
                                         <p class="text-muted mb-0 comment-text">
-                                            {{ resena.comentario|truncatewords:20 }}
+                                            {{ resena.comentario|truncatewords:5 }}
                                         </p>
                                     </td>
                                     <td class="text-center d-none d-lg-table-cell">
                                         <span class="badge bg-light text-dark">
-                                            {{ resena.fecha_creacion|date:"d/m/Y H:i" }}
+                                            {{ resena.fecha_creacion|date:"d/m/Y" }}
+                                        </span>
+                                        <span class="badge bg-light text-dark">
+                                            {{ resena.fecha_creacion|date:"H:i" }}
                                         </span>
                                     </td>
                                     <td class="text-center">
                                         <div class="btn-group">
+                                            {% if user.is_superuser %}
+                                            <a href="{% url 'juegos:resena_delete' resena.pk %}" 
+                                               class="btn btn-sm btn-outline-danger ">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                            {% else %}
                                             <a href="{% url 'juegos:resena_update' resena.pk %}?next=resena_list" 
                                                class="btn btn-sm btn-outline-warning">
                                                 <i class="fas fa-edit"></i>
@@ -103,6 +119,7 @@
                                                class="btn btn-sm btn-outline-danger ">
                                                 <i class="fas fa-trash"></i>
                                             </a>
+                                            {% endif %}
                                         </div>
                                     </td>
                                 </tr>
