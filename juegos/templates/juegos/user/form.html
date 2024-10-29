@@ -3,55 +3,202 @@
 {% block header %}Editar Perfil{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Editar Perfil</h3>
-    </div>
-    <div class="card-body">
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {% if field.name == 'foto' %}
-                    <div class="input-group">
-                        <div class="custom-file">
-                            {{ field }}
-                            <label class="custom-file-label" for="{{ field.id_for_label }}">
-                                {% if field.value %}{{ field.value }}{% else %}Elegir archivo{% endif %}
-                            </label>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex align-items-center">
+                        <div class="user-icon-wrapper mr-3">
+                            {% if user.foto %}
+                                <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-thumbnail">
+                            {% else %}
+                                <i class="fas fa-user fa-2x text-primary"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h3 class="h4 mb-0">Editar Perfil</h3>
+                            <p class="text-muted small mb-0">Actualiza tu información personal</p>
                         </div>
                     </div>
-                {% else %}
-                    {{ field }}
-                {% endif %}
-                {% if field.errors %}
-                    <div class="text-danger">{{ field.errors }}</div>
-                {% endif %}
-            </div>
-            {% endfor %}
+                </div>
 
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Guardar Cambios
-                </button>
-                <a href="{% url 'juegos:user_detail' user.username %}" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Cancelar
-                </a>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Foto de perfil -->
+                        <div class="row">
+                            <div class="col-md-8">
+                                <!-- Campos normales del formulario -->
+                                {% for field in form %}
+                                    {% if field.name != 'foto' %}
+                                    <div class="form-group mb-4">
+                                        <label class="form-label fw-bold" for="{{ field.id_for_label }}">
+                                            {% if field.name == 'username' %}
+                                                <i class="fas fa-user text-primary mr-2"></i>
+                                            {% elif field.name == 'email' %}
+                                                <i class="fas fa-envelope text-primary mr-2"></i>
+                                            {% else %}
+                                                <i class="fas fa-info-circle text-primary mr-2"></i>
+                                            {% endif %}
+                                            {{ field.label }}
+                                        </label>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="text-danger mt-2 small">
+                                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
+                                        {% if field.help_text %}
+                                            <small class="text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+                            <!-- Columna de foto -->
+                            <div class="col-md-4">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-4">
+                                            <i class="fas fa-camera mr-2"></i>Foto de Perfil
+                                        </h5>
+                                        <div class="form-group">
+                                            <div class="image-preview-container mb-3">
+                                                <img id="imagePreview" 
+                                                     src="{% if user.foto %}{{ user.foto.url }}{% else %}#{% endif %}" 
+                                                     class="img-fluid rounded {% if not user.foto %}d-none{% endif %}" 
+                                                     alt="Vista previa">
+                                                <div id="placeholderPreview" 
+                                                     class="placeholder-preview {% if user.foto %}d-none{% endif %}">
+                                                    <i class="fas fa-user-circle fa-3x text-muted"></i>
+                                                    <p class="text-muted mb-0">Sin foto de perfil</p>
+                                                </div>
+                                            </div>
+                                            <div class="input-group">
+                                                {{ form.foto }}
+                                                <label class="input-group-text" for="{{ form.foto.id_for_label }}">
+                                                    <i class="fas fa-upload mr-1"></i>Seleccionar
+                                                </label>
+                                            </div>
+                                            {% if form.foto.errors %}
+                                                <div class="text-danger mt-2 small">
+                                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                                    {{ form.foto.errors }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                            <button type="submit" class="btn btn-primary mr-2">
+                                <i class="fas fa-save mr-2"></i>Guardar Cambios
+                            </button>
+                            <a href="{% url 'juegos:user_detail' user.username %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times mr-2"></i>Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
-{% endblock %}
+
+<style>
+.user-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.user-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-preview-container {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.image-preview-container:hover {
+    border-color: #4e73df;
+}
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.placeholder-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.custom-file-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.form-control:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78,115,223,0.25);
+}
+
+@media (max-width: 576px) {
+    .image-preview-container {
+        height: 150px;
+    }
+}
+</style>
 
 {% block extra_js %}
 <script>
 $(document).ready(function() {
-    $('.custom-file-input').on('change', function() {
-        var fileName = $(this).val().split('\\').pop();
-        $(this).next('.custom-file-label').html(fileName);
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                $('#imagePreview').attr('src', e.target.result).removeClass('d-none');
+                $('#placeholderPreview').addClass('d-none');
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    $("#{{ form.foto.id_for_label }}").change(function() {
+        readURL(this);
     });
 });
 </script>
+{% endblock %}
 {% endblock %}

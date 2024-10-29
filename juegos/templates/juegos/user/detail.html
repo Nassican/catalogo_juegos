@@ -3,79 +3,276 @@
 {% block header %}Perfil de Usuario{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">{{ profile_user.get_full_name|default:profile_user.username }}</h3>
-        {% if user == profile_user %}
-        <div class="card-tools">
-            <a href="{% url 'juegos:user_update' %}" class="btn btn-warning">
-                <i class="fas fa-edit"></i> Editar Perfil
-            </a>
-        </div>
-        {% endif %}
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-4 text-center">
-                {% if profile_user.foto %}
-                    <img src="{{ profile_user.foto.url }}" alt="Foto de perfil" class="img-fluid rounded-circle mb-3" style="max-width: 200px;">
-                {% else %}
-                    <i class="fas fa-user-circle fa-8x text-secondary mb-3"></i>
-                {% endif %}
-            </div>
-            <div class="col-md-8">
-                <dl class="row">
-                    <dt class="col-sm-3">Nombre</dt>
-                    <dd class="col-sm-9">{{ profile_user.get_full_name }}</dd>
-
-                    <dt class="col-sm-3">Usuario</dt>
-                    <dd class="col-sm-9">{{ profile_user.username }}</dd>
-
-                    <dt class="col-sm-3">Email</dt>
-                    <dd class="col-sm-9">{{ profile_user.email }}</dd>
-
-                    {% if profile_user.fecha_nacimiento %}
-                        <dt class="col-sm-3">Fecha de Nacimiento</dt>
-                        <dd class="col-sm-9">{{ profile_user.fecha_nacimiento }}</dd>
-                    {% endif %}
-
-                    {% if profile_user.bio %}
-                        <dt class="col-sm-3">Biografía</dt>
-                        <dd class="col-sm-9">{{ profile_user.bio }}</dd>
-                    {% endif %}
-                </dl>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card mt-4">
-    <div class="card-header">
-        <h3 class="card-title">Reseñas de {{ profile_user.username }}</h3>
-    </div>
-    <div class="card-body">
-        {% if resenas %}
-            {% for resena in resenas %}
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5><a href="{% url 'juegos:juego_detail' resena.juego.pk %}">{{ resena.juego.titulo }}</a></h5>
-                        <div class="mb-2">
-                            {% for i in "12345"|make_list %}
-                                {% if forloop.counter <= resena.puntuacion %}
-                                    <i class="fas fa-star text-warning"></i>
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <!-- Tarjeta de Perfil -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="user-avatar-wrapper mr-3">
+                                {% if profile_user.foto %}
+                                    <img src="{{ profile_user.foto.url }}" alt="Foto de perfil" class="user-avatar">
                                 {% else %}
-                                    <i class="far fa-star"></i>
+                                    <div class="user-avatar-placeholder">
+                                        <i class="fas fa-user-circle fa-2x text-primary"></i>
+                                    </div>
                                 {% endif %}
-                            {% endfor %}
+                            </div>
+                            <div>
+                                <h3 class="h4 mb-1">{{ profile_user.get_full_name|default:profile_user.username }}</h3>
+                                <p class="text-muted small mb-0">
+                                    <i class="fas fa-calendar-alt mr-1"></i>
+                                    Miembro desde {{ profile_user.date_joined|date:"F Y" }}
+                                </p>
+                            </div>
                         </div>
-                        <p>{{ resena.comentario }}</p>
-                        <small class="text-muted">{{ resena.fecha_creacion }}</small>
+                        {% if user == profile_user %}
+                            <a href="{% url 'juegos:user_update' %}" class="btn btn-primary btn-sm hover-lift">
+                                <i class="fas fa-edit mr-2"></i>Editar Perfil
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
-            {% endfor %}
-        {% else %}
-            <p class="text-muted">No hay reseñas para mostrar.</p>
-        {% endif %}
+
+                <div class="card-body p-4">
+                    <div class="row">
+                        <!-- Columna de información personal -->
+                        <div class="col-lg-8 order-2 order-lg-1">
+                            <div class="profile-info">
+                                <!-- Información básica -->
+                                <div class="info-section mb-4">
+                                    <h4 class="h5 mb-3 text-primary">
+                                        <i class="fas fa-user-circle mr-2"></i>Información Personal
+                                    </h4>
+                                    <div class="row g-3">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="info-item">
+                                                <label class="text-muted small d-block mb-1">Nombre de Usuario</label>
+                                                <p class="mb-0 fw-bold">{{ profile_user.username }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label class="text-muted small d-block mb-1">Email</label>
+                                                <p class="mb-0">{{ profile_user.email }}</p>
+                                            </div>
+                                        </div>
+                                        {% if profile_user.fecha_nacimiento %}
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label class="text-muted small d-block mb-1">Fecha de Nacimiento</label>
+                                                <p class="mb-0">{{ profile_user.fecha_nacimiento|date:"d/m/Y" }}</p>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Biografía -->
+                                {% if profile_user.bio %}
+                                <div class="info-section">
+                                    <h4 class="h5 mb-3 text-primary">
+                                        <i class="fas fa-book mr-2"></i>Biografía
+                                    </h4>
+                                    <div class="info-item">
+                                        <p class="mb-0">{{ profile_user.bio }}</p>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Columna de foto -->
+                        <div class="col-lg-4 order-1 order-lg-2 mb-4 mb-lg-0">
+                            <div class="profile-image-wrapper">
+                                <div class="profile-image-container">
+                                    {% if profile_user.foto %}
+                                        <img src="{{ profile_user.foto.url }}" alt="Foto de perfil" class="profile-image">
+                                    {% else %}
+                                        <div class="profile-image-placeholder">
+                                            <i class="fas fa-user-circle fa-5x text-primary opacity-50"></i>
+                                            <p class="text-muted mt-2">Sin foto de perfil</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de Reseñas -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="h5 mb-0">
+                            <i class="fas fa-star text-warning mr-2"></i>
+                            Reseñas de {{ profile_user.username }}
+                        </h4>
+                        <span class="badge bg-primary">{{ resenas|length }}</span>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    {% if resenas %}
+                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                            {% for resena in resenas %}
+                                <div class="col">
+                                    <div class="card h-100 border-0 shadow-sm hover-lift">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="game-icon-wrapper mr-3">
+                                                    {% if resena.juego.imagen %}
+                                                        <img src="{{ resena.juego.imagen.url }}" alt="{{ resena.juego.titulo }}" class="game-thumbnail">
+                                                    {% else %}
+                                                        <i class="fas fa-gamepad text-primary"></i>
+                                                    {% endif %}
+                                                </div>
+                                                <div>
+                                                    <h5 class="card-title mb-1">
+                                                        <a href="{% url 'juegos:juego_detail' resena.juego.pk %}" class="text-decoration-none">
+                                                            {{ resena.juego.titulo }}
+                                                        </a>
+                                                    </h5>
+                                                    <div class="rating-stars">
+                                                        {% for i in "12345"|make_list %}
+                                                            {% if forloop.counter <= resena.puntuacion %}
+                                                                <i class="fas fa-star text-warning"></i>
+                                                            {% else %}
+                                                                <i class="far fa-star text-warning"></i>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="card-text text-muted mb-3">{{ resena.comentario|truncatewords:30 }}</p>
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock mr-1"></i>
+                                                {{ resena.fecha_creacion|date:"d/m/Y" }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="empty-state-icon mb-4">
+                                <i class="fas fa-star fa-3x text-muted opacity-50"></i>
+                            </div>
+                            <h5 class="text-muted mb-2">No hay reseñas para mostrar</h5>
+                            <p class="text-muted mb-0">Este usuario aún no ha publicado ninguna reseña.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+.user-avatar-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    border: 2px solid #e3e6f0;
+}
+
+.user-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* Aspecto cuadrado */
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    border: 2px solid #e3e6f0;
+}
+
+.profile-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Cambiado de cover a contain */
+    padding: 8px; /* Añadido padding para evitar que la imagen toque los bordes */
+}
+
+.profile-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+.info-item {
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.game-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.game-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hover-lift {
+    transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-3px);
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.03);
+    border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+    .profile-image-wrapper {
+        padding-bottom: 75%; /* Aspecto más rectangular en móviles */
+    }
+}
+</style>
 {% endblock %}
