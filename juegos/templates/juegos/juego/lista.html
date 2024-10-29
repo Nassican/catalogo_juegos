@@ -1,60 +1,211 @@
 {% extends 'juegos/base.html' %}
+{% load humanize %}
 {% block title %}Juegos{% endblock %}
-{% block header %}Juegos{% endblock %}
+{% block header %}Catálogo de Juegos{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Lista de Juegos</h3>
-        <div class="card-tools">
-            <a href="{% url 'juegos:juego_create' %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Nuevo Juego
-            </a>
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <!-- Cabecera con búsqueda y botón de nuevo -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-gamepad fa-2x text-primary mr-2"></i>
+                            <h3 class="mb-0">Explorar Juegos</h3>
+                        </div>
+                        {% if user.is_admin_role %}
+                        <a href="{% url 'juegos:juego_create' %}" 
+                           class="btn btn-primary d-flex align-items-center">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            <span>Nuevo Juego</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid de juegos -->
+            <div class="row g-4">
+                {% for juego in juegos %}
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card h-100 shadow-hover border-0 rounded-3 overflow-hidden">
+                        <!-- Contenedor de imagen con ratio fijo -->
+                        <div class="game-image-wrapper position-relative">
+                            {% if juego.imagen %}
+                            <img src="{{ juego.imagen.url }}" 
+                                 class="game-image" 
+                                 alt="{{ juego.titulo }}">
+                            {% else %}
+                            <div class="no-image-placeholder">
+                                <i class="fas fa-gamepad fa-3x text-muted opacity-50"></i>
+                            </div>
+                            {% endif %}
+                            <!-- Badges flotantes -->
+                            <div class="game-badges">
+                                <span class="badge bg-primary">
+                                    <i class="fas fa-code"></i> {{ juego.desarrollador }}
+                                </span>
+                                <span class="badge bg-success">
+                                    <i class="fas fa-dollar-sign"></i> {{ juego.precio|stringformat:".2f"|intcomma }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title mb-3">
+                                <a href="{% url 'juegos:juego_detail' juego.pk %}" 
+                                   class="text-decoration-none text-dark hover-primary">
+                                    {{ juego.titulo }}
+                                </a>
+                            </h5>
+                            
+                            <!-- Categorías -->
+                            <div class="mb-3">
+                                {% for categoria in juego.categorias.all %}
+                                <span class="badge bg-light text-dark me-1">
+                                    {{ categoria.nombre }}
+                                </span>
+                                {% endfor %}
+                            </div>
+
+                            <p class="card-text text-muted flex-grow-1">
+                                {{ juego.descripcion|truncatechars:120 }}
+                            </p>
+
+                            <!-- Botones de acción -->
+                            <div class="mt-auto">
+                                <div class="btn-group w-100">
+                                    <a href="{% url 'juegos:juego_detail' juego.pk %}" 
+                                       class="btn btn-outline-primary">
+                                        <i class="fas fa-eye me-1"></i> Ver Detalles
+                                    </a>
+                                    {% if user.is_admin_role %}
+                                    <a href="{% url 'juegos:juego_update' juego.pk %}" 
+                                       class="btn btn-outline-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'juegos:juego_delete' juego.pk %}" 
+                                       class="btn btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <div class="empty-state mb-4">
+                            <i class="fas fa-gamepad fa-4x text-muted opacity-50"></i>
+                        </div>
+                        <h4 class="text-muted">No hay juegos registrados</h4>
+                        {% if user.is_admin_role %}
+                        <p class="text-muted mb-4">¡Comienza agregando algunos juegos!</p>
+                        <a href="{% url 'juegos:juego_create' %}" 
+                           class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus-circle me-2"></i> Agregar Juego
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
-    <div class="card-body">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Título</th>
-                    <th>Desarrollador</th>
-                    <th>Precio</th>
-                    <th>Imagen</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for juego in juegos %}
-                <tr>
-                    <td>
-                        <a href="{% url 'juegos:juego_detail' juego.pk %}">{{ juego.titulo }}</a>
-                    </td>
-                    <td>{{ juego.desarrollador }}</td>
-                    <td>${{ juego.precio }}</td>
-                    <td>
-                        {% if juego.imagen %}
-                            <img src="{{ juego.imagen.url }}" alt="{{ juego.titulo }}" style="max-height: 50px">
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'juegos:juego_detail' juego.pk %}" class="btn btn-sm btn-info">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        <a href="{% url 'juegos:juego_update' juego.pk %}" class="btn btn-sm btn-warning">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="{% url 'juegos:juego_delete' juego.pk %}" class="btn btn-sm btn-danger">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center">No hay juegos registrados.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
 </div>
+
+<style>
+/* Estilos para las tarjetas */
+.shadow-hover {
+    transition: all 0.3s ease;
+}
+
+.shadow-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.15) !important;
+}
+
+/* Contenedor de imagen con ratio fijo */
+.game-image-wrapper {
+    position: relative;
+    padding-top: 66.67%; /* Ratio 3:2 */
+    background-color: #f8f9fa;
+    overflow: hidden;
+}
+
+.game-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card:hover .game-image {
+    transform: scale(1.05);
+}
+
+.no-image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+/* Badges flotantes */
+.game-badges {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.game-badges .badge {
+    font-size: 0.8rem;
+    padding: 0.5em 0.7em;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Hover effects */
+.hover-primary:hover {
+    color: var(--primary) !important;
+}
+
+/* Empty state */
+.empty-state {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.03);
+    border-radius: 50%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .game-image-wrapper {
+        padding-top: 75%; /* Ratio 4:3 para móviles */
+    }
+    
+    .game-badges {
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+}
+</style>
 {% endblock %}
