@@ -3,7 +3,7 @@
 {% block header %}Registro{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-2">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-lg border-0">
@@ -13,63 +13,40 @@
                     <p class="text-white-50 mb-0">Completa el formulario para registrarte</p>
                 </div>
                 <div class="card-body p-5">
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} mr-2"></i>
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-
                     <form method="post" novalidate class="register-form">
                         {% csrf_token %}
-                        
                         <div class="form-floating mb-4">
-                            {{ form.username }}
-                            <label for="{{ form.username.id_for_label }}">
+                            <label for="id_username">
                                 <i class="fas fa-user text-success mr-2"></i>Usuario
                             </label>
-                            {% if form.username.errors %}
-                                <div class="text-danger small mt-1">{{ form.username.errors }}</div>
-                            {% endif %}
-                            {% if form.username.help_text %}
-                                <div class="form-text">{{ form.username.help_text|safe }}</div>
-                            {% endif %}
+                            {{ form.username }}
+                            <div class="invalid-feedback" id="username-error"></div>
+                            <div class="form-text">{{ form.username.help_text|safe }}</div>
                         </div>
 
                         <div class="form-floating mb-4">
-                            {{ form.email }}
-                            <label for="{{ form.email.id_for_label }}">
+                            <label for="id_email">
                                 <i class="fas fa-envelope text-success mr-2"></i>Correo electrónico
                             </label>
-                            {% if form.email.errors %}
-                                <div class="text-danger small mt-1">{{ form.email.errors }}</div>
-                            {% endif %}
+                            {{ form.email }}
+                            <div class="invalid-feedback" id="email-error"></div>
                         </div>
 
                         <div class="form-floating mb-4">
-                            {{ form.password1 }}
-                            <label for="{{ form.password1.id_for_label }}">
+                            <label for="id_password1">
                                 <i class="fas fa-lock text-success mr-2"></i>Contraseña
                             </label>
-                            {% if form.password1.errors %}
-                                <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
-                            {% endif %}
-                            {% if form.password1.help_text %}
-                                <div class="form-text">{{ form.password1.help_text|safe }}</div>
-                            {% endif %}
+                            {{ form.password1 }}
+                            <div class="invalid-feedback" id="password1-error"></div>
+                            <div class="form-text">{{ form.password1.help_text|safe }}</div>
                         </div>
 
                         <div class="form-floating mb-4">
-                            {{ form.password2 }}
-                            <label for="{{ form.password2.id_for_label }}">
+                            <label for="id_password2">
                                 <i class="fas fa-lock text-success mr-2"></i>Confirmar contraseña
                             </label>
-                            {% if form.password2.errors %}
-                                <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
-                            {% endif %}
+                            {{ form.password2 }}
+                            <div class="invalid-feedback" id="password2-error"></div>
                         </div>
 
                         <button type="submit" class="btn btn-success btn-lg w-100 mb-4">
@@ -89,4 +66,52 @@
         </div>
     </div>
 </div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const password1 = document.getElementById('id_password1');
+    const password2 = document.getElementById('id_password2');
+    const username = document.getElementById('id_username');
+    const email = document.getElementById('id_email');
+
+    // Validación de contraseñas en tiempo real
+    function validatePasswords() {
+        const password2Error = document.getElementById('password2-error');
+        if (password1.value !== password2.value) {
+            password2.classList.add('is-invalid');
+            password2Error.textContent = 'Las contraseñas no coinciden';
+            return false;
+        } else {
+            password2.classList.remove('is-invalid');
+            password2Error.textContent = '';
+            return true;
+        }
+    }
+
+    // Validación de contraseña mientras se escribe
+    password1.addEventListener('input', function() {
+        const password1Error = document.getElementById('password1-error');
+        if (this.value.length < 8) {
+            this.classList.add('is-invalid');
+            password1Error.textContent = 'La contraseña debe tener al menos 8 caracteres';
+        } else {
+            this.classList.remove('is-invalid');
+            password1Error.textContent = '';
+        }
+        if (password2.value) validatePasswords();
+    });
+
+    password2.addEventListener('input', validatePasswords);
+
+    // Validación del formulario antes de enviar
+    form.addEventListener('submit', function(e) {
+        if (!validatePasswords()) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{% endblock %}
 {% endblock %}

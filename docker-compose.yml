@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: >
+      bash -c "echo 'Servidor iniciado. Accede a: http://localhost:8000' &&
+               python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=catalogo_juegos.settings
+
+volumes:
+  media_volume:
