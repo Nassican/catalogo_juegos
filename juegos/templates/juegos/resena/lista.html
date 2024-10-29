@@ -3,56 +3,103 @@
 {% block header %}Mis Reseñas{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Lista de Mis Reseñas</h3>
-    </div>
-    <div class="card-body">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Juego</th>
-                    <th>Puntuación</th>
-                    <th>Comentario</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for resena in resenas %}
-                <tr>
-                    <td>
-                        <a href="{% url 'juegos:juego_detail' resena.juego.pk %}">
-                            {{ resena.juego.titulo }}
-                        </a>
-                    </td>
-                    <td>
-                        {% for i in "12345"|make_list %}
-                            {% if forloop.counter <= resena.puntuacion %}
-                                <i class="fas fa-star text-warning"></i>
-                            {% else %}
-                                <i class="far fa-star"></i>
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>{{ resena.comentario|truncatewords:30 }}</td>
-                    <td>{{ resena.fecha|date:"d/m/Y H:i" }}</td>
-                    <td>
-                        <a href="{% url 'juegos:resena_update' resena.pk %}" class="btn btn-sm btn-warning">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="{% url 'juegos:resena_delete' resena.pk %}" class="btn btn-sm btn-danger">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center">No has escrito ninguna reseña todavía.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title h5 mb-0">
+                        <i class="fas fa-star text-warning me-2"></i>
+                        Lista de Mis Reseñas
+                    </h3>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="px-4">Juego</th>
+                                <th class="text-center d-none d-md-table-cell">Puntuación</th>
+                                <th>Comentario</th>
+                                <th class="text-center d-none d-lg-table-cell">Fecha</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resena in resenas %}
+                            <tr>
+                                <td class="px-4">
+                                    <div class="d-flex flex-column">
+                                        <a href="{% url 'juegos:juego_detail' resena.juego.pk %}" 
+                                           class="text-decoration-none fw-bold">
+                                            {{ resena.juego.titulo }}
+                                        </a>
+                                        <div class="d-md-none mt-1">
+                                            {% for i in "12345"|make_list %}
+                                                {% if forloop.counter <= resena.puntuacion %}
+                                                    <i class="fas fa-star text-warning small"></i>
+                                                {% else %}
+                                                    <i class="far fa-star text-muted small"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <small class="text-muted d-lg-none mt-1">
+                                            {{ resena.fecha_creacion|date:"d/m/Y" }}
+                                        </small>
+                                    </div>
+                                </td>
+                                <td class="text-center d-none d-md-table-cell">
+                                    {% for i in "12345"|make_list %}
+                                        {% if forloop.counter <= resena.puntuacion %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star text-muted"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <span class="text-muted">{{ resena.comentario|truncatewords:20 }}</span>
+                                </td>
+                                <td class="text-center d-none d-lg-table-cell">
+                                    <span class="badge bg-light text-dark">
+                                        {{ resena.fecha_creacion|date:"d/m/Y H:i" }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="{% url 'juegos:resena_update' resena.pk %}" 
+                                           class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'juegos:resena_delete' resena.pk %}" 
+                                           class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="fas fa-comment-alt fa-3x mb-3 d-block"></i>
+                                        <h5>No has escrito ninguna reseña todavía</h5>
+                                        <p class="mb-3">¡Comienza compartiendo tu opinión sobre los juegos!</p>
+                                        <a href="{% url 'juegos:juego_list' %}" 
+                                           class="btn btn-primary btn-sm">
+                                            <i class="fas fa-gamepad me-2"></i>
+                                            Explorar juegos
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
