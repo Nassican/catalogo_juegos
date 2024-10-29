@@ -1,75 +1,192 @@
-{% extends 'juegos/base.html' %} {% block title %}{{ action }}
-Categoría{%endblock %} {% block header %}{{ action }} Categoría{% endblock %}
-{%block content %}
-<div class="card">
-  <div class="card-header">
-    <h3 class="card-title">{{ action }} Categoría</h3>
-  </div>
-  <div class="card-body">
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
+{% extends 'juegos/base.html' %}
+{% block title %}{{ action }} Categoría{% endblock %}
+{% block header %}{{ action }} Categoría{% endblock %}
 
-      <!-- Campo Nombre -->
-      <div class="form-group">
-        <label for="{{ form.nombre.id_for_label }}"
-          >{{ form.nombre.label }}</label
-        >
-        {{ form.nombre }} {% if form.nombre.errors %}
-        <div class="text-danger">{{ form.nombre.errors }}</div>
-        {% endif %}
-      </div>
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <!-- Cabecera del formulario -->
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-tags fa-2x text-primary mr-3"></i>
+                            <h3 class="card-title h4 mb-0">{{ action }} Categoría</h3>
+                        </div>
+                        {% if action == 'Editar' %}
+                        <a href="{% url 'juegos:categoria_delete' form.instance.pk %}" 
+                           class="btn btn-outline-danger">
+                            <i class="fas fa-trash mr-2"></i>Eliminar Categoría
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
 
-      <!-- Campo Descripción -->
-      <div class="form-group">
-        <label for="{{ form.descripcion.id_for_label }}"
-          >{{ form.descripcion.label }}</label
-        >
-        {{ form.descripcion }} {% if form.descripcion.errors %}
-        <div class="text-danger">{{ form.descripcion.errors }}</div>
-        {% endif %}
-      </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" id="categoriaForm">
+                        {% csrf_token %}
 
-      <!-- Campo Imagen -->
-      <div class="form-group">
-        <label for="{{ form.imagen.id_for_label }}"
-          >{{ form.imagen.label }}</label
-        >
-        <div class="input-group">
-          <div class="custom-file">
-            {{ form.imagen }}
-            <label
-              class="custom-file-label"
-              for="{{ form.imagen.id_for_label }}"
-            >
-              {% if form.imagen.value %}{{ form.imagen.value }}{% else %}Elegir
-              archivo{% endif %}
-            </label>
-          </div>
+                        <!-- Contenedor principal -->
+                        <div class="row">
+                            <!-- Columna izquierda: Información -->
+                            <div class="col-md-8">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <!-- Nombre -->
+                                        <div class="form-group mb-4">
+                                            <label class="form-label fw-bold" for="{{ form.nombre.id_for_label }}">
+                                                <i class="fas fa-tag mr-2"></i>{{ form.nombre.label }}
+                                            </label>
+                                            {{ form.nombre }}
+                                            {% if form.nombre.errors %}
+                                            <div class="text-danger mt-1 small">
+                                                <i class="fas fa-exclamation-circle"></i>
+                                                {{ form.nombre.errors }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Descripción -->
+                                        <div class="form-group">
+                                            <label class="form-label fw-bold" for="{{ form.descripcion.id_for_label }}">
+                                                <i class="fas fa-align-left mr-2"></i>{{ form.descripcion.label }}
+                                            </label>
+                                            {{ form.descripcion }}
+                                            {% if form.descripcion.errors %}
+                                            <div class="text-danger mt-1 small">
+                                                <i class="fas fa-exclamation-circle"></i>
+                                                {{ form.descripcion.errors }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Columna derecha: Imagen -->
+                            <div class="col-md-4">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-4">
+                                            <i class="fas fa-image mr-2"></i>Multimedia
+                                        </h5>
+
+                                        <!-- Imagen -->
+                                        <div class="form-group">
+                                            <label class="form-label fw-bold" for="{{ form.imagen.id_for_label }}">
+                                                <i class="fas fa-upload mr-2"></i>{{ form.imagen.label }}
+                                            </label>
+                                            <div class="image-preview-container mb-3">
+                                                <img id="imagePreview" 
+                                                     src="{% if form.imagen.value %}{{ form.imagen.value.url }}{% else %}#{% endif %}" 
+                                                     class="img-fluid rounded {% if not form.imagen.value %}d-none{% endif %}" 
+                                                     alt="Vista previa">
+                                                <div id="placeholderPreview" 
+                                                     class="placeholder-preview {% if form.imagen.value %}d-none{% endif %}">
+                                                    <i class="fas fa-image fa-3x text-muted"></i>
+                                                    <p class="text-muted mb-0">Sin imagen</p>
+                                                </div>
+                                            </div>
+                                            <div class="input-group">
+                                                {{ form.imagen }}
+                                                <label class="input-group-text" for="{{ form.imagen.id_for_label }}">
+                                                    Seleccionar
+                                                </label>
+                                            </div>
+                                            {% if form.imagen.errors %}
+                                            <div class="text-danger mt-1 small">
+                                                <i class="fas fa-exclamation-circle"></i>
+                                                {{ form.imagen.errors }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="card-footer bg-white pt-4 px-0 pb-0">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary mr-2">
+                                    <i class="fas fa-save mr-2"></i>{{ action }}
+                                </button>
+                                <a href="{% url 'juegos:categoria_list' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times mr-2"></i>Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        {% if form.imagen.errors %}
-        <div class="text-danger">{{ form.imagen.errors }}</div>
-        {% endif %}
-      </div>
-
-      <div class="card-footer">
-        <button type="submit" class="btn btn-primary">
-          <i class="fas fa-save"></i> {{ action }}
-        </button>
-        <a href="{% url 'juegos:categoria_list' %}" class="btn btn-secondary">
-          <i class="fas fa-times"></i> Cancelar
-        </a>
-      </div>
-    </form>
-  </div>
+    </div>
 </div>
-{% endblock %} {% block extra_js %}
+
+<style>
+.image-preview-container {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.image-preview-container:hover {
+    border-color: #4e73df;
+}
+
+.image-preview-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.placeholder-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.form-control:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.form-label {
+    color: #4e73df;
+}
+</style>
+
+{% endblock %}
+
+{% block extra_js %}
 <script>
-  $(document).ready(function () {
-    // Para mostrar el nombre del archivo seleccionado
-    $(".custom-file-input").on("change", function () {
-      var fileName = $(this).val().split("\\").pop();
-      $(this).next(".custom-file-label").html(fileName);
+$(document).ready(function() {
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                $('#imagePreview').attr('src', e.target.result).removeClass('d-none');
+                $('#placeholderPreview').addClass('d-none');
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    $("#{{ form.imagen.id_for_label }}").change(function() {
+        readURL(this);
     });
-  });
+});
 </script>
 {% endblock %}

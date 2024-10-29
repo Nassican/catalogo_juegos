@@ -3,103 +3,248 @@
 {% block header %}Mis Reseñas{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-10">
-        <div class="card shadow-sm">
-            <div class="card-header bg-white py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title h5 mb-0">
-                        <i class="fas fa-star text-warning me-2"></i>
-                        Lista de Mis Reseñas
-                    </h3>
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="review-icon-wrapper mr-3">
+                                <i class="fas fa-star fa-2x text-warning"></i>
+                            </div>
+                            <div>
+                                {% if user.is_superuser %}
+                                <h3 class="h4 mb-0">Reseñas de Usuarios</h3>
+                                <p class="text-muted small mb-0">Gestiona las reseñas de los usuarios</p>
+                                {% else %}  
+                                <h3 class="h4 mb-0">Mis Reseñas</h3>
+                                <p class="text-muted small mb-0">Gestiona tus opiniones sobre los juegos</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="bg-light">
-                            <tr>
-                                <th class="px-4">Juego</th>
-                                <th class="text-center d-none d-md-table-cell">Puntuación</th>
-                                <th>Comentario</th>
-                                <th class="text-center d-none d-lg-table-cell">Fecha</th>
-                                <th class="text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for resena in resenas %}
-                            <tr>
-                                <td class="px-4">
-                                    <div class="d-flex flex-column">
-                                        <a href="{% url 'juegos:juego_detail' resena.juego.pk %}" 
-                                           class="text-decoration-none fw-bold">
-                                            {{ resena.juego.titulo }}
-                                        </a>
-                                        <div class="d-md-none mt-1">
+
+                <div class="card-body">
+                    {% if resenas %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Juego</th>
+                                    <th class="text-center d-none d-md-table-cell">Puntuación</th>
+                                    <th>Comentario</th>
+                                    <th class="text-center d-none d-lg-table-cell">Fecha</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for resena in resenas %}
+                                <tr class="hover-row">
+                                    <td class="px-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="game-image-wrapper mr-3">
+                                                {% if resena.juego.imagen %}
+                                                    <img src="{{ resena.juego.imagen.url }}" 
+                                                         alt="{{ resena.juego.titulo }}"
+                                                         class="game-thumbnail">
+                                                {% else %}
+                                                    <div class="no-image-placeholder">
+                                                        <i class="fas fa-gamepad text-muted"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <a href="{% url 'juegos:juego_detail' resena.juego.pk %}" 
+                                                   class="text-decoration-none fw-bold text-primary">
+                                                    {{ resena.juego.titulo }}
+                                                </a>
+                                                <div class="d-md-none mt-1">
+                                                    {% for i in "12345"|make_list %}
+                                                        {% if forloop.counter <= resena.puntuacion %}
+                                                            <i class="fas fa-star text-warning small"></i>
+                                                        {% else %}
+                                                            <i class="far fa-star text-warning small"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center d-none d-md-table-cell">
+                                        <div class="rating-stars">
                                             {% for i in "12345"|make_list %}
                                                 {% if forloop.counter <= resena.puntuacion %}
-                                                    <i class="fas fa-star text-warning small"></i>
+                                                    <i class="fas fa-star text-warning"></i>
                                                 {% else %}
-                                                    <i class="far fa-star text-muted small"></i>
+                                                    <i class="far fa-star text-warning"></i>
                                                 {% endif %}
                                             {% endfor %}
                                         </div>
-                                        <small class="text-muted d-lg-none mt-1">
-                                            {{ resena.fecha_creacion|date:"d/m/Y" }}
-                                        </small>
-                                    </div>
-                                </td>
-                                <td class="text-center d-none d-md-table-cell">
-                                    {% for i in "12345"|make_list %}
-                                        {% if forloop.counter <= resena.puntuacion %}
-                                            <i class="fas fa-star text-warning"></i>
-                                        {% else %}
-                                            <i class="far fa-star text-muted"></i>
-                                        {% endif %}
-                                    {% endfor %}
-                                </td>
-                                <td>
-                                    <span class="text-muted">{{ resena.comentario|truncatewords:20 }}</span>
-                                </td>
-                                <td class="text-center d-none d-lg-table-cell">
-                                    <span class="badge bg-light text-dark">
-                                        {{ resena.fecha_creacion|date:"d/m/Y H:i" }}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="btn-group">
-                                        <a href="{% url 'juegos:resena_update' resena.pk %}?next=resena_list" 
-                                           class="btn btn-sm btn-outline-warning me-1">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="{% url 'juegos:resena_delete' resena.pk %}" 
-                                           class="btn btn-sm btn-outline-danger">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="5" class="text-center py-5">
-                                    <div class="text-muted">
-                                        <i class="fas fa-comment-alt fa-3x mb-3 d-block"></i>
-                                        <h5>No has escrito ninguna reseña todavía</h5>
-                                        <p class="mb-3">¡Comienza compartiendo tu opinión sobre los juegos!</p>
-                                        <a href="{% url 'juegos:juego_list' %}" 
-                                           class="btn btn-primary btn-sm">
-                                            <i class="fas fa-gamepad me-2"></i>
-                                            Explorar juegos
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                    </td>
+                                    <td>
+                                        <p class="text-muted mb-0 comment-text">
+                                            {{ resena.comentario|truncatewords:20 }}
+                                        </p>
+                                    </td>
+                                    <td class="text-center d-none d-lg-table-cell">
+                                        <span class="badge bg-light text-dark">
+                                            {{ resena.fecha_creacion|date:"d/m/Y H:i" }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <a href="{% url 'juegos:resena_update' resena.pk %}?next=resena_list" 
+                                               class="btn btn-sm btn-outline-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'juegos:resena_delete' resena.pk %}" 
+                                               class="btn btn-sm btn-outline-danger ">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-5">
+                                        <div class="empty-state">
+                                            <i class="fas fa-comment-alt fa-3x text-muted mb-3"></i>
+                                            <h5>No has escrito ninguna reseña todavía</h5>
+                                            <p class="text-muted mb-3">¡Comienza compartiendo tu opinión sobre los juegos!</p>
+                                            <a href="{% url 'juegos:juego_list' %}" 
+                                               class="btn btn-primary">
+                                                <i class="fas fa-gamepad mr-2"></i>
+                                                Explorar juegos
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="empty-state mb-4">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-comment-alt fa-4x text-muted"></i>
+                                </div>
+                            </div>
+                            {% if user.is_superuser %}
+                                <h4 class="text-muted mb-3">No hay reseñas de usuarios</h4>
+                                <p class="text-muted mb-4">Los usuarios aún no han compartido sus opiniones sobre los juegos.</p>
+                                <a href="{% url 'juegos:juego_list' %}" class="btn btn-primary btn-lg rounded-pill hover-lift">
+                                    <i class="fas fa-gamepad mr-2"></i>
+                                    Ver catálogo de juegos
+                                </a>
+                            {% else %}
+                                <h4 class="text-muted mb-3">No has escrito ninguna reseña todavía</h4>
+                                <p class="text-muted mb-4">¡Comienza compartiendo tu opinión sobre los juegos!</p>
+                                <a href="{% url 'juegos:juego_list' %}" class="btn btn-primary btn-lg rounded-pill hover-lift">
+                                    <i class="fas fa-gamepad mr-2"></i>
+                                    Explorar juegos para reseñar
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+.game-image-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.game-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.review-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #fff3cd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+.hover-row {
+    transition: all 0.3s ease;
+}
+
+.hover-row:hover {
+    background-color: #f8f9fa;
+}
+
+.action-btn {
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.empty-state-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.03);
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+}
+
+.hover-lift {
+    transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-3px);
+}
+
+.rounded-pill {
+    border-radius: 50rem !important;
+}
+
+.comment-text {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .comment-text {
+        max-width: 150px;
+    }
+}
+</style>
 {% endblock %}

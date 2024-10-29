@@ -94,7 +94,7 @@
                                         <div class="d-flex flex-wrap gap-2">
                                             {% for categoria in juego.categorias.all %}
                                                 <a href="{% url 'juegos:categoria_detail' categoria.pk %}" 
-                                                   class="badge bg-primary text-decoration-none">
+                                                   class="badge bg-primary text-decoration-none mr-2">
                                                     {{ categoria.nombre }}
                                                 </a>
                                             {% endfor %}
@@ -205,7 +205,7 @@
                             {% if not user_has_reviewed %}
                                 <a href="{% url 'juegos:resena_create' juego.pk %}" 
                                    class="btn btn-primary btn-lg">
-                                    <i class="fas fa-plus me-2"></i>
+                                    <i class="fas fa-plus mr-2"></i>
                                     Escribir una reseña
                                 </a>
                             {% endif %}
