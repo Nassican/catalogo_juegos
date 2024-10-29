@@ -114,10 +114,6 @@ catalogo_juegos/
 - `DJANGO_SETTINGS_MODULE`: Módulo de configuración
 - `SECRET_KEY`: Clave secreta de Django
 
-## 📝 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para detalles
-
 ## ✨ Contribuir
 
 1. Fork el proyecto
