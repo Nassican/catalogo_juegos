@@ -1,0 +1,65 @@
+{% load humanize %}
+
+<div class="modal fade" id="resenaModal{{ resena.pk }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-star text-warning mr-2"></i>
+                    Reseña de {{ resena.juego.titulo }}
+                </h5>
+            </div>
+            <div class="modal-body">
+                <!-- Información del usuario -->
+                <div class="d-flex align-items-center mb-3">
+                    {% if resena.usuario.foto %}
+                        <img src="{{ resena.usuario.foto.url }}" 
+                             alt="Avatar" 
+                             class="rounded-circle mr-3"
+                             style="width: 48px; height: 48px; object-fit: cover;">
+                    {% else %}
+                        <i class="fas fa-user-circle fa-3x text-muted mr-3"></i>
+                    {% endif %}
+                    <div>
+                        <h6 class="mb-1">{{ resena.usuario.get_full_name|default:resena.usuario.username }}</h6>
+                        <div class="rating-stars">
+                            {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= resena.puntuacion %}
+                                    <i class="fas fa-star text-warning"></i>
+                                {% else %}
+                                    <i class="far fa-star text-warning"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenido de la reseña -->
+                <div class="review-content bg-light p-3 rounded">
+                    {{ resena.comentario|linebreaks }}
+                </div>
+
+                <!-- Metadatos -->
+                <div class="text-muted mt-3 small">
+                    <i class="fas fa-clock mr-1"></i>
+                    Publicado el {{ resena.fecha_creacion|date:"d/m/Y" }} a las {{ resena.fecha_creacion|date:"H:i" }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                {% if user == resena.usuario %}
+                    <a href="{% url 'juegos:resena_update' resena.pk %}" 
+                       class="btn btn-warning">
+                        <i class="fas fa-edit mr-2"></i>Editar
+                    </a>
+                {% endif %}
+                {% if user == resena.usuario or user.is_admin_role %}
+                    <a href="{% url 'juegos:resena_delete' resena.pk %}" 
+                       class="btn btn-danger">
+                        <i class="fas fa-trash mr-2"></i>Eliminar
+                    </a>
+                {% endif %}
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

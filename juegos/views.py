@@ -37,7 +37,6 @@ def user_update(request):
         form = UserUpdateForm(instance=request.user)
     return render(request, 'juegos/user/form.html', {'form': form})
 
-
 @login_required
 def dashboard(request):
     total_juegos = Juego.objects.count()
@@ -211,7 +210,8 @@ def resena_create(request, juego_id):
 @login_required
 def resena_update(request, pk):
     resena = get_object_or_404(Resena, pk=pk)
-    if request.user != resena.usuario and not request.user.is_admin_role():
+    # Solo permitir al dueño de la reseña editarla
+    if request.user != resena.usuario:
         messages.error(request, 'No tienes permiso para editar esta reseña.')
         return redirect('juegos:juego_detail', pk=resena.juego.pk)
 

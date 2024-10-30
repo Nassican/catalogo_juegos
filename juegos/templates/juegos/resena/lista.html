@@ -105,20 +105,25 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="btn-group">
+                                            <a href="#" class="btn btn-sm btn-outline-primary" 
+                                               data-bs-toggle="modal" 
+                                               data-bs-target="#resenaModal{{ resena.pk }}">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
                                             {% if user.is_superuser %}
-                                            <a href="{% url 'juegos:resena_delete' resena.pk %}" 
-                                               class="btn btn-sm btn-outline-danger ">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
+                                                <a href="{% url 'juegos:resena_delete' resena.pk %}" 
+                                                   class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
                                             {% else %}
-                                            <a href="{% url 'juegos:resena_update' resena.pk %}?next=resena_list" 
-                                               class="btn btn-sm btn-outline-warning">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="{% url 'juegos:resena_delete' resena.pk %}" 
-                                               class="btn btn-sm btn-outline-danger ">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
+                                                <a href="{% url 'juegos:resena_update' resena.pk %}?next=resena_list" 
+                                                   class="btn btn-sm btn-outline-warning">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="{% url 'juegos:resena_delete' resena.pk %}" 
+                                                   class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
                                             {% endif %}
                                         </div>
                                     </td>
@@ -171,6 +176,11 @@
         </div>
     </div>
 </div>
+
+<!-- Modales de Reseñas -->
+{% for resena in resenas %}
+    {% include 'juegos/resena/modal_detalle.html' with resena=resena %}
+{% endfor %}
 
 <style>
 .game-image-wrapper {
@@ -263,5 +273,38 @@
         max-width: 150px;
     }
 }
+
+/* Estilos para el modal */
+.modal-content {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+
+.review-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.rating-stars {
+    font-size: 1.2rem;
+}
+
+.modal .btn-group {
+    gap: 0.5rem;
+}
 </style>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar todos los modales
+    var modales = document.querySelectorAll('.modal');
+    modales.forEach(function(modal) {
+        new bootstrap.Modal(modal);
+    });
+});
+</script>
 {% endblock %}
