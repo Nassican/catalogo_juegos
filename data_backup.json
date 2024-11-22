@@ -1,0 +1,281 @@
+[
+  {
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+      "action_time": "2024-10-28T19:03:46.464Z",
+      "user": 3,
+      "content_type": 7,
+      "object_id": "3",
+      "object_repr": "Admin",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "039160xsdbmslwrlqq8e77u37v93i645",
+    "fields": {
+      "session_data": ".eJxVjDsOwyAQRO9CHSF-ZiFlep8BLbAOTiKQjF1FuXtsyUVSjTTvzbxZwG0tYeu0hDmzK9Ps8ttFTE-qB8gPrPfGU6vrMkd-KPyknY8t0-t2un8HBXvZ15OAmCQoY9DEBBE0wWCNFG6yKiqXaA9jvQNFFjOh9dJrQUpIGoA0-3wB0783Rw:1tDmli:xpNoNkzaeybNCZODG4xA2mTxbbBDR1eUGTqNJffvvsA",
+      "expire_date": "2024-12-04T15:37:26.153Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "rzuk10qvn4qdfn7bx7eygt9rb17sciiz",
+    "fields": {
+      "session_data": ".eJxVjDsOwyAQRO9CHSF-ZiFlep8BLbAOTiKQjF1FuXtsyUVSjTTvzbxZwG0tYeu0hDmzK9Ps8ttFTE-qB8gPrPfGU6vrMkd-KPyknY8t0-t2un8HBXvZ15OAmCQoY9DEBBE0wWCNFG6yKiqXaA9jvQNFFjOh9dJrQUpIGoA0-3wB0783Rw:1t61S6:CreRQs09nm9du_bf8RJEWJHPAS-8NS2D36vWDND86ss",
+      "expire_date": "2024-11-13T05:41:06.148Z"
+    }
+  },
+  {
+    "model": "juegos.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$fUdCfSQDMAtoyUM6H6YsLN$k4YoVXOpSSGWrDYjv7SnrRJiErMJvo8OjAemqDD4f1E=",
+      "last_login": "2024-11-20T15:35:42.677Z",
+      "is_superuser": false,
+      "username": "Nassican",
+      "first_name": "Jesus",
+      "last_name": "Benavides",
+      "email": "nassicand@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-10-28T15:06:09.790Z",
+      "role": "user",
+      "foto": "usuarios/OIP.jpg",
+      "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "fecha_nacimiento": "2002-12-27",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "juegos.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$ZwKvv2kQs7CLpLuVVX1Zzp$QY9q7kYunmOLHnEc0Lm9PJoChA83ZpEoaDrm0oyELeQ=",
+      "last_login": "2024-10-28T18:26:24.801Z",
+      "is_superuser": false,
+      "username": "LGsusOk",
+      "first_name": "",
+      "last_name": "",
+      "email": "nassicand@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-10-28T18:25:10.872Z",
+      "role": "user",
+      "foto": "",
+      "bio": "",
+      "fecha_nacimiento": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "juegos.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$sfXbGCtzhjFlLxZQZ5Evgd$iWZmw8ZzEWrkwv6N1DtJMwLSlQfplG18sxdDs/dCWOU=",
+      "last_login": "2024-11-20T15:37:26.145Z",
+      "is_superuser": true,
+      "username": "Admin",
+      "first_name": "Jesus",
+      "last_name": "Ronaldinho",
+      "email": "nassicanh@gmail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2024-10-28T19:02:08Z",
+      "role": "admin",
+      "foto": "usuarios/image.png",
+      "bio": "",
+      "fecha_nacimiento": "2015-10-29",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "juegos.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$kPSXAgfkDsO3qSFLueBSsH$8GbpF/Rtz8+PyBrI4cq2eGA/zFLkp94ocQFRDlEg9bE=",
+      "last_login": "2024-10-29T15:26:56.264Z",
+      "is_superuser": false,
+      "username": "Jesus",
+      "first_name": "Test",
+      "last_name": "Account",
+      "email": "nassican2@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-10-29T15:26:56.023Z",
+      "role": "user",
+      "foto": "usuarios/35092-one-piece.jpg",
+      "bio": "",
+      "fecha_nacimiento": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "juegos.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$mKWSO72yMP0QPpV9DvEeFc$nsPQ3YGSTM+TYA01IIWb+OcQ9HTAzlfz9+IFLGD6efA=",
+      "last_login": "2024-10-29T15:42:11.217Z",
+      "is_superuser": false,
+      "username": "Jesus2",
+      "first_name": "",
+      "last_name": "",
+      "email": "asdas@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-10-29T15:42:10.879Z",
+      "role": "user",
+      "foto": "",
+      "bio": "",
+      "fecha_nacimiento": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "juegos.user",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$xUhbpYzPCofaApIcxCsKtk$QnamVrG/NPci9oNRrdVUzmNvyBZcvbdsKqjOSscRAao=",
+      "last_login": "2024-10-29T15:51:48.469Z",
+      "is_superuser": false,
+      "username": "NassicanHD",
+      "first_name": "",
+      "last_name": "",
+      "email": "nassicand@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-10-29T15:45:46.609Z",
+      "role": "user",
+      "foto": "",
+      "bio": "",
+      "fecha_nacimiento": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "juegos.categoria",
+    "pk": 1,
+    "fields": {
+      "nombre": "Mundo Abierto",
+      "descripcion": "Juegos de mundo abierto guau",
+      "imagen": "categorias/Open-World_Game-512_qYtIw1w.webp"
+    }
+  },
+  {
+    "model": "juegos.categoria",
+    "pk": 4,
+    "fields": {
+      "nombre": "Acci�n",
+      "descripcion": "Juegos de acci�n",
+      "imagen": "categorias/action.png"
+    }
+  },
+  {
+    "model": "juegos.juego",
+    "pk": 1,
+    "fields": {
+      "titulo": "Red Dead Redemption 2",
+      "descripcion": "Con m�s de 175 premios al Juego del a�o y m�s de 250 valoraciones perfectas, Red Dead Redemption 2 es la �pica historia de Arthur Morgan y la banda de Van der Linde, que huyen por toda Am�rica en el albor de una nueva era. Tambi�n incluye acceso al mundo multijugador compartido de Red Dead Online.",
+      "fecha_lanzamiento": "2019-12-05",
+      "desarrollador": "Rockstar Games",
+      "precio": "239900.00",
+      "requisitos": "M�nimo:\r\nRequiere un procesador y un sistema operativo de 64 bits\r\nSO: Windows 10 - 64-bit\r\nProcesador: Intel� Core� i5-2500K / AMD FX-6300\r\nMemoria: 8 GB de RAM\r\nGr�ficos: Nvidia GeForce GTX 770 2GB / AMD Radeon R9 280 3GB\r\nRed: Conexi�n de banda ancha a Internet\r\nAlmacenamiento: 150 GB de espacio disponible\r\nTarjeta de sonido: Direct X Compatible\r\n\r\nRecomendado:\r\nRequiere un procesador y un sistema operativo de 64 bits\r\nSO: Windows 10 - 64-bit\r\nProcesador: Intel� Core� i7-4770K / AMD Ryzen 5 1500X\r\nMemoria: 12 GB de RAM\r\nGr�ficos: Nvidia GeForce GTX 1060 6GB / AMD Radeon RX 480 4GB\r\nRed: Conexi�n de banda ancha a Internet\r\nAlmacenamiento: 150 GB de espacio disponible XD\r\nTarjeta de sonido: Direct X Compatible",
+      "imagen": "juegos/Red_Dead_Redemption_2_PC_leCVHcb.png",
+      "fecha_creacion": "2024-10-28T18:20:40.111Z",
+      "categorias": [1, 4]
+    }
+  },
+  {
+    "model": "juegos.juego",
+    "pk": 2,
+    "fields": {
+      "titulo": "Juego Test Qwik Supergame",
+      "descripcion": "asd",
+      "fecha_lanzamiento": "2024-10-15",
+      "desarrollador": "yop",
+      "precio": "1231231.00",
+      "requisitos": "asdasd",
+      "imagen": "juegos/QWIK.png",
+      "fecha_creacion": "2024-10-28T20:14:21.341Z",
+      "categorias": [1]
+    }
+  },
+  {
+    "model": "juegos.juego",
+    "pk": 3,
+    "fields": {
+      "titulo": "Assassin�s Creed� IV Black Flag�",
+      "descripcion": "A�o 1715. Los piratas dominaban todo el Caribe y hab�an establecido su propio gobierno en el que la corrupci�n, la codicia y la crueldad eran las �nicas leyes.Entre estos hombres destacaba un joven y altivo capit�n llamado Edward Kenway.",
+      "fecha_lanzamiento": "2013-10-29",
+      "desarrollador": "Ubisoft Montreal",
+      "precio": "129900.00",
+      "requisitos": "M�nimo:\r\nSO *: Windows Vista SP2\r\nProcesador: Intel Core2Quad Q8400 @ 2.6 GHz or AMD Athlon II X4 620 @ 2.6 GHz\r\nMemoria: 2 GB de RAM\r\nGr�ficos: Nvidia Geforce GTX 260 or AMD Radeon HD 4870 (512MB VRAM with shader Model 4.0 or higher)\r\nAlmacenamiento: 30 GB de espacio disponible\r\nTarjeta de sonido: DirectX Compatible Sound Card with latest drivers\r\nNotas adicionales: Windows-Compatible keyboard and mouse required, controller optional.\r\n\r\nRecomendado:\r\nSO *: Windows Vista SP2\r\nProcesador: Intel Core i5 2400S @ 2.5 GHz or better or AMD Phenom II x4 940 @ 3.0 GHz\r\nMemoria: 4 GB de RAM\r\nGr�ficos: Nvidia GeForce GTX 470 or AMD Radeon HD 5850 (1024MB VRAM with Shader Model 5.0) or better\r\nAlmacenamiento: 30 GB de espacio disponible\r\nTarjeta de sonido: DirectX Compatible Sound Card with latest drivers\r\nNotas adicionales: Supported video cards at the time of release: Nvidia GeForce GTX 260 or better and GeForce GTX 400, GTX 500, GTX 600 and GTX 700 series. AMD Radeon HD4870 or better and Radeon HD5000, HD6000 and HD7000 series. Note: Latest GeForce drivers tested: 327.23 for all series. Latest Radeon drivers tested: 13.1 for Radeon HD4000, 13.4 for Radeon HD5000, HD6000 and HD7000 series on Vista and 13.9 for Radeon HD5000, HD6000 and HD7000 series on Win7 and Win8. Laptop versions of these cards may work but are NOT officially supported.\r\n* A partir del 1 de enero de 2024, el cliente de Steam solo ser� compatible con Windows 10 y versiones posteriores.",
+      "imagen": "juegos/3031ef7930369.560b4541ccafe.jpg",
+      "fecha_creacion": "2024-10-29T15:51:36.079Z",
+      "categorias": [1, 4]
+    }
+  },
+  {
+    "model": "juegos.resena",
+    "pk": 2,
+    "fields": {
+      "usuario": 2,
+      "juego": 1,
+      "puntuacion": 4,
+      "comentario": "Es el Apocalypse Now o Citizen Kane de los videojuegos porque Rockstar ha llevado las cosas muy lejos para entregarnos un t�tulo 10/10 y que, lo �nico malo ser�a que, una vez que lo completas, cualquier otro juego te parecer� flojo. Arthur Morgan es un personajazo, y Rockstar la tiene muy dif�cil ahora con lo que ser� GTA 6 porque es casi imposible igualar el impacto que te genera la historia de RDR2. Ju�guenlo si, adem�s de jugar, quieren vivir una experiencia �nica, pero les advierto algo: ju�guenlo con calma y en un momento donde nadie les interrumpa y tengan la mente despejada. Pero cr�anme, valdr� la pena. grrr",
+      "fecha_creacion": "2024-10-28T18:26:42.928Z"
+    }
+  },
+  {
+    "model": "juegos.resena",
+    "pk": 10,
+    "fields": {
+      "usuario": 1,
+      "juego": 1,
+      "puntuacion": 5,
+      "comentario": "Alto juegardo. Atenci�n al detalle hasta enfermizo, gr�ficos brutales e historia muy interesante. Al principio se hace algo pesado, pero cuando llega la acci�n y te aprendes los controles, se vuelve muy placentero de jugar.",
+      "fecha_creacion": "2024-10-29T06:43:58.722Z"
+    }
+  },
+  {
+    "model": "juegos.resena",
+    "pk": 11,
+    "fields": {
+      "usuario": 6,
+      "juego": 1,
+      "puntuacion": 5,
+      "comentario": "A quien le interese ser minucioso este juego cumple eso. Como menciona la mayor�a al principio hay momentos tediosos en la espera de alguna situaci�n de intriga, pero conforme vas avanzando en la historia no sabes que pasar� (Las situaciones no son predecibles). Cada detalle de este videojuego es como pararse frente a un cuadro de pintura de la �poca del renacimiento observar cada lienzo. Recomendable usar aud�fonos over ear para disfrutar el detalle del sonido en el ambiente y m�sica, o bocinas con equalizador integrado",
+      "fecha_creacion": "2024-10-29T15:46:45.175Z"
+    }
+  },
+  {
+    "model": "juegos.resena",
+    "pk": 12,
+    "fields": {
+      "usuario": 6,
+      "juego": 2,
+      "puntuacion": 5,
+      "comentario": "A quien le interese ser minucioso este juego cumple eso. Como menciona la mayor�a al principio hay momentos tediosos en la espera de alguna situaci�n de intriga, pero conforme vas avanzando en la historia no sabes que pasar� (Las situaciones no son predecibles). Cada detalle de este videojuego es como pararse frente a un cuadro de pintura de la �poca del renacimiento observar cada lienzo. Recomendable usar aud�fonos over ear para disfrutar el detalle del sonido en el ambiente y m�sica, o bocinas con equalizador integrado",
+      "fecha_creacion": "2024-10-29T15:47:11.005Z"
+    }
+  },
+  {
+    "model": "juegos.resena",
+    "pk": 13,
+    "fields": {
+      "usuario": 6,
+      "juego": 3,
+      "puntuacion": 5,
+      "comentario": "Primer Assassin's Creed de la saga en el cual la historia es irrelevante. Lo que importa es destruir barcos y flotas y asaltar y piratear!!!! Vivan los piratas!!!\r\n\r\nA favor:\r\n\r\n* Buen motor gr�fico.\r\n* Buena jugabilidad.\r\n* Bugs reducidos.\r\n* Fuera de lo com�n con respecto a los otros juegos de la saga.\r\n* Espectacular musicalizaci�n, como todos lo juegos de ubisoft.\r\n\r\nEn contra:\r\n\r\n* Multiplayer un poco abandonado, pero cuando puedes entrar es muy divertido.\r\n* La historia, en realidad la saga termin� en el AC III, pero bueno, el dinero es el dinero...\r\n\r\nResultado (en mi opini�n), es un 9/10 (apartado de que no tiene nada de historia y vi�ndolo para hundir flotas de barcos).\r\nRECOMENDADO!!",
+      "fecha_creacion": "2024-10-29T15:52:13.792Z"
+    }
+  }
+]
