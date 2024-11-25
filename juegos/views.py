@@ -7,6 +7,11 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import login
 from django.urls import reverse
 from .decorators import admin_required
+from .chat_ai import get_chat_response, get_game_context
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+import json
+
 # Dashboard
 
 
@@ -14,6 +19,7 @@ def index(request):
     if request.user.is_authenticated:
         return redirect('juegos:dashboard')
     return redirect('juegos:login')
+
 
 @login_required
 def user_detail(request, username):
@@ -25,10 +31,12 @@ def user_detail(request, username):
     }
     return render(request, 'juegos/user/detail.html', context)
 
+
 @login_required
 def user_update(request):
     if request.method == 'POST':
-        form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+        form = UserUpdateForm(request.POST, request.FILES,
+                              instance=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Perfil actualizado exitosamente.')
@@ -37,19 +45,21 @@ def user_update(request):
         form = UserUpdateForm(instance=request.user)
     return render(request, 'juegos/user/form.html', {'form': form})
 
+
 @login_required
 def dashboard(request):
     total_juegos = Juego.objects.count()
     total_categorias = Categoria.objects.count()
-    
+
     if request.user.is_admin_role():
         total_resenas = Resena.objects.count()
         resenas = None
     else:
         # Para usuarios normales, mostrar solo sus reseñas
-        resenas = Resena.objects.filter(usuario=request.user).order_by('-fecha_creacion')[:5]
+        resenas = Resena.objects.filter(
+            usuario=request.user).order_by('-fecha_creacion')[:5]
         total_resenas = resenas.count()
-    
+
     context = {
         'total_juegos': total_juegos,
         'total_categorias': total_categorias,
@@ -65,9 +75,11 @@ def categoria_list(request):
     categorias = Categoria.objects.all()
     return render(request, 'juegos/categoria/lista.html', {'categorias': categorias})
 
+
 def categoria_detail(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
-    juegos = Juego.objects.filter(categorias=categoria)  # Cambiado de categoria a categorias
+    # Cambiado de categoria a categorias
+    juegos = Juego.objects.filter(categorias=categoria)
     context = {
         'categoria': categoria,
         'juegos': juegos,
@@ -123,10 +135,11 @@ def juego_detail(request, pk):
     juego = get_object_or_404(Juego, pk=pk)
     resenas = Resena.objects.filter(juego=juego)
     user_has_reviewed = False
-    
+
     if request.user.is_authenticated:
-        user_has_reviewed = Resena.objects.filter(juego=juego, usuario=request.user).exists()
-    
+        user_has_reviewed = Resena.objects.filter(
+            juego=juego, usuario=request.user).exists()
+
     context = {
         'juego': juego,
         'resenas': resenas,
@@ -186,13 +199,14 @@ def resena_list(request):
 @login_required
 def resena_create(request, juego_id):
     juego = get_object_or_404(Juego, id=juego_id)
-    
+
     # Verificar si el usuario ya tiene una reseña para este juego
-    existing_review = Resena.objects.filter(usuario=request.user, juego=juego).exists()
+    existing_review = Resena.objects.filter(
+        usuario=request.user, juego=juego).exists()
     if existing_review:
         messages.error(request, 'Ya has publicado una reseña para este juego.')
         return redirect('juegos:juego_detail', pk=juego_id)
-        
+
     if request.method == 'POST':
         form = ResenaForm(request.POST)
         if form.is_valid():
@@ -228,8 +242,8 @@ def resena_update(request, pk):
     else:
         form = ResenaForm(instance=resena)
     return render(request, 'juegos/resena/form.html', {
-        'form': form, 
-        'action': 'Editar', 
+        'form': form,
+        'action': 'Editar',
         'juego': resena.juego,
         'next': request.GET.get('next')
     })
@@ -264,6 +278,7 @@ class CustomLoginView(LoginView):
         messages.success(self.request, 'Inicio de sesión exitoso.')
         return reverse('juegos:dashboard')
 
+
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -275,8 +290,41 @@ def register(request):
             messages.success(request, 'Registro exitoso. ¡Bienvenido!')
             return redirect('juegos:dashboard')
         else:
-            messages.error(request, 'Por favor corrige los errores en el formulario.')
+            messages.error(
+                request, 'Por favor corrige los errores en el formulario.')
     else:
         form = CustomUserCreationForm()
     return render(request, 'juegos/registration/register.html', {'form': form})
 
+
+@login_required
+def chat_view(request):
+    return render(request, 'juegos/chat.html')
+
+
+@login_required
+@require_http_methods(["POST"])
+def chat_message(request):
+    try:
+        data = json.loads(request.body)
+        message = data.get('message', '')
+        conversation_history = data.get('history', [])
+
+        # Obtener contexto del catálogo
+        juegos = Juego.objects.all()
+        categorias = Categoria.objects.all()
+        resena_info = Resena.objects.all()
+        context = get_game_context(juegos, categorias)
+
+        # Obtener respuesta
+        response = get_chat_response(message, conversation_history, context)
+
+        return JsonResponse({
+            'response': response,
+            'success': True
+        })
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e),
+            'success': False
+        }, status=500)

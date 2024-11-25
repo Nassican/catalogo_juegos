@@ -38,4 +38,6 @@ urlpatterns = [
     path('resenas/<int:pk>/editar/', views.resena_update, name='resena_update'),
     path('resenas/<int:pk>/eliminar/', views.resena_delete, name='resena_delete'),
     path('resenas/', views.resena_list, name='resena_list'),
+    path('chat/', views.chat_view, name='chat'),
+    path('chat/message/', views.chat_message, name='chat_message'),
 ]

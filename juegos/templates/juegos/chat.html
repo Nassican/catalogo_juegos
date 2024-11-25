@@ -1,0 +1,361 @@
+{% extends 'juegos/base.html' %}
+{% block title %}Chat con IA{% endblock %}
+{% block header %}Asistente Virtual de Juegos{% endblock %}
+
+{% block content %}
+<div class="chat-container-wrapper">
+    <div class="chat-interface">
+        <div class="chat-header">
+            <div class="d-flex align-items-center gap-3">
+                <div class="robot-avatar mr-2">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h5 class="mb-0">GameBot Assistant</h5>
+                    <small class="text-muted">
+                        <i class="fas fa-circle text-success mr-1"></i>En línea
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-main">
+            <div class="chat-container" id="chat-messages">
+                <div class="welcome-message">
+                    <h4>👋 ¡Bienvenido al Asistente de Videojuegos!</h4>
+                    <p class="text-muted">¿En qué puedo ayudarte hoy?</p>
+                    
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="sendQuickAction('¿Qué juegos de acción tienes?')">
+                            <i class="fas fa-gamepad"></i>
+                            Buscar juegos de acción
+                        </button>
+                        <button class="quick-action-btn" onclick="sendQuickAction('Recomiéndame juegos populares')">
+                            <i class="fas fa-star"></i>
+                            Juegos populares
+                        </button>
+                        <button class="quick-action-btn" onclick="sendQuickAction('Muestra los juegos más baratos')">
+                            <i class="fas fa-tags"></i>
+                            Juegos económicos
+                        </button>
+                        <button class="quick-action-btn" onclick="sendQuickAction('¿Qué juegos de estrategia tienes?')">
+                            <i class="fas fa-brain"></i>
+                            Juegos de estrategia
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-wrapper">
+                <form id="chat-form" class="chat-input-container">
+                    <div class="input-group">
+                        <input type="text" id="user-input" class="form-control" 
+                               placeholder="Escribe tu mensaje aquí..." required>
+                        <button type="submit" class="btn btn-primary send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chat-container-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100%;
+    padding: 1rem;
+}
+
+.chat-interface {
+    width: 50%;
+    height: calc(100vh - 110px);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-header {
+    padding: 1rem 1.5rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    scroll-behavior: smooth;
+}
+
+.welcome-message {
+    text-align: center;
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.quick-action-btn {
+    padding: 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background: #fff;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quick-action-btn:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+    max-width: 80%;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    animation: fadeIn 0.3s ease;
+}
+
+.user-message {
+    background: #007bff;
+    color: #fff;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+}
+
+.ai-message {
+    background: #f8f9fa;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+}
+
+.chat-input-wrapper {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.input-group {
+    background: #f8f9fa;
+    border-radius: 24px;
+    padding: 0.5rem;
+}
+
+.form-control {
+    border: none;
+    background: #f8f9fa !important;
+    padding-left: 1rem;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    background: #f8f9fa !important;
+    border: none;
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: #6c757d;
+}
+
+.send-btn {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .chat-interface {
+        height: calc(100vh - 100px);
+        border-radius: 0;
+    }
+    
+    .message {
+        max-width: 90%;
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+.typing-indicator {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    max-width: 80%;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    background: #6c757d;
+    border-radius: 50%;
+    animation: typingAnimation 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) { animation-delay: 0s; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingAnimation {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+}
+
+@media (max-width: 992px) {
+    .chat-interface {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const chatForm = document.getElementById('chat-form');
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        let conversationHistory = [];
+
+        window.sendQuickAction = function(message) {
+            userInput.value = message;
+            const submitEvent = new Event('submit', {
+                bubbles: true,
+                cancelable: true,
+            });
+            chatForm.dispatchEvent(submitEvent);
+        };
+
+        function addTypingIndicator() {
+            const indicator = document.createElement('div');
+            indicator.className = 'typing-indicator';
+            indicator.id = 'typing-indicator';
+            indicator.innerHTML = `
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        `;
+            chatMessages.appendChild(indicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        async function typeMessage(element, text) {
+            const words = text.split(' ');
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i];
+                const formattedWord = word
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+                element.innerHTML += (i > 0 ? ' ' : '') + formattedWord;
+                await new Promise(resolve => setTimeout(resolve, 50));
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        function addMessage(content, type) {
+            const div = document.createElement('div');
+            div.className = `message ${type}-message`;
+
+            if (type === 'user') {
+                div.textContent = content;
+                chatMessages.appendChild(div);
+            } else {
+                chatMessages.appendChild(div);
+                typeMessage(div, content);
+            }
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        chatForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            userInput.value = '';
+
+            try {
+                addTypingIndicator();
+
+                const response = await fetch('{% url "juegos:chat_message" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        history: conversationHistory
+                    })
+                });
+
+                const data = await response.json();
+
+                removeTypingIndicator();
+
+                if (data.success) {
+                    addMessage(data.response, 'ai');
+                    conversationHistory.push(
+                        { role: 'user', content: message },
+                        { role: 'assistant', content: data.response }
+                    );
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                removeTypingIndicator();
+                addMessage('Lo siento, hubo un error al procesar tu mensaje.', 'system');
+                console.error(error);
+            }
+        });
+    });
+</script>
+{% endblock %}
